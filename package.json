@@ -1,7 +1,5 @@
 {
   "name": "viewtabs",
-  "module": "src/popup/index.tsx",
-  "type": "module",
   "devDependencies": {
     "@types/bun": "latest",
     "@types/react": "^18.3.12",

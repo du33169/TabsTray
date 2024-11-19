@@ -21,7 +21,11 @@ body {
     text-align: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
+.tab-favicon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
 .tab-thumbnail {
     width: 100%;
     height: 100px;

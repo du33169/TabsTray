@@ -1,6 +1,7 @@
 {
   "entry":{
-    "popup":"src/js/popup.tsx"
+    "js/index":"src/js/index.tsx",
+    "js/background":"src/js/background.js"
   },
   "output":{
     "path":"build"
