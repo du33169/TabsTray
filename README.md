@@ -1,4 +1,18 @@
-# viewtabs
+# Tabs Tray
+
+No more endless scrolling! Tabs Tray bring back the same experience of tab management on mobile browsers, or better!
+You can now manage browser tabs using a full window, instead of that narrow tab bar or sidebar.
+
+
+# Install
+
+working in progress...
+
+# Screenshots
+
+working in progress...
+
+# Build
 
 To install dependencies:
 
@@ -6,10 +20,17 @@ To install dependencies:
 bun install
 ```
 
-To run:
+To build:
 
 ```bash
-bun run index.ts
+bun run build
 ```
 
-This project was created using `bun init` in bun v1.1.18. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+Output is located at `./build` directory.
+
+# Tech Stack
+
+mako
+bun
+typescript
+react
