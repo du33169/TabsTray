@@ -1,0 +1,9 @@
+{
+  "entry":{
+    "popup":"src/js/popup.tsx"
+  },
+  "output":{
+    "path":"build"
+  },
+  "copy":["ext"]
+}

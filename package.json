@@ -1,0 +1,23 @@
+{
+  "name": "viewtabs",
+  "module": "src/popup/index.tsx",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@umijs/mako": "^0.9.6"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+
+  "scripts": {
+    "dev": "mako build --mode development --watch",
+    "build": "mako build --mode production"
+  }
+}
