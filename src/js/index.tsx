@@ -1,39 +1,12 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
-function promiseWithTimeout(promise, timeout, defaultValue) {
-    return Promise.race([
-        promise,
-        new Promise((resolve) =>
-            setTimeout(() => resolve(defaultValue), timeout)
-        )
-    ]);
-}
 
-
-class TabHandle {
-    tab: any;
-    thumnailUri: string;
-    constructor(tab: any, thumnailUri: string) {
-        this.tab = tab;
-        this.thumnailUri = thumnailUri;
-    }
-}
 function App() {
-    const [tabHandles, setTabHandles] = useState<TabHandle[]>([]);
+    const [tabs, setTabs] = useState<browser.tabs.Tab[]>([]);
     useEffect(() => {
         async function fetchTabs() {
             const tabs = await browser.tabs.query({ currentWindow: true });
-            console.log(tabs);
-            const tabHandles = await Promise.all(
-                tabs.map(async (tab) => {  // 在这里使用 async
-                    const capturePromise = browser.tabs.captureTab(tab.id, { scale: 0.25 })
-                    const thumbUri = await promiseWithTimeout(capturePromise, 500, "empty") ;
-                    // console.log(tab.title,thumbUri);
-                    return new TabHandle(tab, thumbUri);
-                })
-            );
-            setTabHandles(tabHandles);
-            console.log("fetchTabs done");
+            setTabs(tabs);
         }
         fetchTabs();
     }, []);
@@ -41,22 +14,32 @@ function App() {
 
     return (
         <div className="tab-grid">
-            {tabHandles.map((tabH) => Tab(tabH))}
+            {tabs.map((tab) => (
+                <Tab key={tab.id} tab={tab} />
+            ))}
         </div>
     );
 }
-function Tab(tabH: TabHandle) {
+function Tab({ tab }: { tab: browser.tabs.Tab }) {
+    const [thumbnailUri, setThumbnailUri] = useState<string | null>(null); // 创建状态
+    useEffect(() => {
+        async function fetchThumbnail() {
+            const thumbUri = await browser.tabs.captureTab(tab.id!, { scale: 0.25 });
+            setThumbnailUri(thumbUri);
+        }
+        fetchThumbnail();
+    }, [tab.id]);
 
     return (
-        <div key={tabH.tab.id} className="tab-card">
+        <div key={tab.id} className="tab-card">
             <img
-                src={tabH.tab.favIconUrl}
-                alt={tabH.tab.title}
+                src={tab.favIconUrl}
+                alt={tab.title}
                 className="tab-favicon"
             />
-            <p className="tab-title">{tabH.tab.title}</p>
+            <p className="tab-title">{tab.title}</p>
             <img
-                src={tabH.thumnailUri}
+                src={thumbnailUri || ""}
                 alt={"Thumbnail"}
                 className="tab-thumbnail"
             />
