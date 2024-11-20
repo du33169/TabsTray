@@ -2,20 +2,24 @@
   "manifest_version": 3,
   "name": "Tabs Tray",
   "version": "0.0.1",
-
   "description": "View current tabs with titles and thumbnails using a full window.",
-
   "icons": {
     "48": "icons/icon.svg"
   },
-  "permissions": ["tabs"],
-  "host_permissions": ["<all_urls>"],
+  "permissions": [
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "action": {
-      "default_icon": "icons/icon.svg",
-      "default_title": "Tabs Tray"
-    },
-"background": {
-	"scripts": ["js/background.js"]
+    "default_icon": "icons/icon.svg",
+    "default_title": "Tabs Tray"
+  },
+  "background": {
+    "scripts": [
+      "js/background.js"
+    ]
   }
 
 }

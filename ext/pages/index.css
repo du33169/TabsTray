@@ -8,35 +8,77 @@ body {
 
 .tab-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 10px;
     padding: 20px;
 }
 
 .tab-card {
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 10px;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    background-color: #f9f9f9; /* Subtle background for contrast */
+    border: 1px solid #e0e0e0; /* Soft border for a clean look */
+    border-radius: 12px; /* Rounded corners for modern feel */
+    padding: 12px;
+    text-align: left; /* Align content to the left for better readability */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Elevated shadow for depth */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+.tab-card:hover {
+    transform: translateY(-4px); /* Slight lift on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
+}
+
+.tab-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Align items neatly across the header */
+    margin-bottom: 8px;
+}
+
 .tab-favicon {
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
     object-fit: contain;
-}
-.tab-thumbnail {
-    width: 100%;
-    height: 100px;
-    object-fit: contain;
-    margin-bottom: 10px;
+    margin-right: 8px; /* Space between favicon and title */
 }
 
 .tab-title {
+    flex: 1; /* Allow title to take up remaining space */
     font-size: 14px;
     font-weight: bold;
+    color: #333; /* Darker color for better readability */
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    margin: 0; /* Remove default paragraph margins */
 }
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.tab-btn:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* Subtle hover effect */
+}
+
+.tab-btn img {
+    width: 16px;
+    height: 16px;
+}
+
+.tab-thumbnail {
+    width: 100%;
+    height: 120px; /* Larger thumbnail for better visibility */
+    object-fit: cover; /* Fill the container while maintaining aspect ratio */
+    border-radius: 8px; /* Rounded corners for consistency */
+    margin-top: 8px; /* Space between header and thumbnail */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for the image */
+}
+
+

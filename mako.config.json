@@ -6,5 +6,6 @@
   "output":{
     "path":"build"
   },
-  "copy":["ext"]
+  "copy":["ext"],
+  "hmr":false
 }

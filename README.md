@@ -4,15 +4,15 @@ No more endless scrolling! Tabs Tray bring back the same experience of tab manag
 You can now manage browser tabs using a full window, instead of that narrow tab bar or sidebar.
 
 
-# Install
+## Install
 
 working in progress...
 
-# Screenshots
+## Screenshots
 
 working in progress...
 
-# Build
+## Build
 
 To install dependencies:
 
@@ -28,9 +28,8 @@ bun run build
 
 Output is located at `./build` directory.
 
-# Tech Stack
+## Tech Stack
 
-mako
-bun
-typescript
-react
+framework: [react](https://react.dev/)
+bundler: [mako](https://makojs.dev/)
+package manager: [bun](https://bun.sh/)
