@@ -55,7 +55,12 @@ body {
 }
 
 .tab-btn {
+    width: 24px;
+    height: 24px;
     background: none;
+    background-repeat: no-repeat;
+    background-size: 70%;
+    background-position: center;
     border: none;
     padding: 4px;
     cursor: pointer;
@@ -67,10 +72,6 @@ body {
     background-color: rgba(0, 0, 0, 0.1); /* Subtle hover effect */
 }
 
-.tab-btn img {
-    width: 16px;
-    height: 16px;
-}
 
 .tab-thumbnail {
     width: 100%;
@@ -78,7 +79,9 @@ body {
     object-fit: cover; /* Fill the container while maintaining aspect ratio */
     border-radius: 8px; /* Rounded corners for consistency */
     margin-top: 8px; /* Space between header and thumbnail */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for the image */
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); Subtle shadow for the image */
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
-import CloseIcon from "@material-icons/svg/svg/close/baseline.svg"
+import CloseIcon from "@material-icons/svg/svg/close/round.svg"
+import NoThumbnail from "@material-icons/svg/svg/no_photography/outline.svg"
 function App() {
     const [tabs, setTabs] = useState<browser.tabs.Tab[]>([]);
     useEffect(() => {
@@ -43,18 +44,22 @@ function Tab({ tab }: { tab: browser.tabs.Tab }) {
     return (
         <a key={tab.id} className="tab-card" href={tab.url} onClick={switch_to_tab}>
             <div className="tab-card-header">
-                <img src={tab.favIconUrl} alt={tab.title} className="tab-favicon"/>
+                {tab.favIconUrl && (<img src={tab.favIconUrl} alt={tab.title} className="tab-favicon" />)}
                 <p className="tab-title">{tab.title}</p>
-                <button className="tab-btn" onClick={(e: React.MouseEvent) => {e.stopPropagation(); browser.tabs.remove(tab.id!) }}>
-                    <img src={CloseIcon} alt={"Close"}></img>
+                <button
+                    className="tab-btn"
+                    onClick={(e: React.MouseEvent) => { e.stopPropagation(); browser.tabs.remove(tab.id!) }}
+                    style={{ backgroundImage: `url(${CloseIcon})` }}
+                    // other background styles are set in CSS
+                >
                 </button>
             </div>
-            
-            
-            <img
-                src={thumbnailUri || ""}
-                alt={"Thumbnail"}
+            <div
                 className="tab-thumbnail"
+                style={{
+                    backgroundImage: `url(${thumbnailUri || NoThumbnail})`,
+                    filter: thumbnailUri? undefined : "opacity(0.5)",
+                }}
             />
         </a>
     )
