@@ -41,13 +41,25 @@ function Tab({ tab }: { tab: browser.tabs.Tab }) {
         fetchThumbnail();
     }, [tab.id]);
 
+    async function switch_to_tab(e: React.MouseEvent) {
+        console.log(`switch to tab ${tab.title}`);
+        e.preventDefault();
+        browser.tabs.update(tab.id!, { active: true })
+    }
+    async function close_tab(e: React.MouseEvent) {
+        console.log(`closing tab ${tab.title}`);
+        e.preventDefault(); // prevent open a new tab of <a> tag
+        e.stopPropagation();
+        browser.tabs.remove(tab.id!).catch((e)=>alert("Failed to close tab"+e));
+    }
     return (
-        <a key={tab.id} className="tab-card" href={tab.url} onClick={switch_to_tab}>
+        <a key={tab.id} className="tab-card" href={tab.url} target="_blank" onClick={switch_to_tab} >
             <div className="tab-card-header">
                 {tab.favIconUrl && (<img src={tab.favIconUrl} alt={tab.title} className="tab-favicon" />)}
                 <p className="tab-title">{tab.title}</p>
                 <button
                     className="tab-btn"
+                    onClick={close_tab}
                     style={{ backgroundImage: `url(${CloseIcon})` }}
                     // other background styles are set in CSS
                 >
