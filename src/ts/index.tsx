@@ -69,7 +69,8 @@ function Tab({ tab }: { tab: browser.tabs.Tab }) {
                 className="tab-thumbnail"
                 style={{
                     backgroundImage: `url(${thumbnailUri || NoThumbnail})`,
-                    filter: thumbnailUri? undefined : "opacity(0.5)",
+                    filter: thumbnailUri ? undefined : "opacity(0.5)",
+                    aspectRatio: Math.max(screen.availWidth / screen.availHeight , 4/3) ,
                 }}
             />
         </a>

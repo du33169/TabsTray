@@ -2,8 +2,6 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f0f0f0;
-    color: #333;
 }
 
 .tab-grid {
@@ -15,10 +13,8 @@ body {
 
 .tab-card {
     text-decoration: none;
-    background-color: #f9f9f9; /* Subtle background for contrast */
-    border: 1px solid #e0e0e0; /* Soft border for a clean look */
     border-radius: 12px; /* Rounded corners for modern feel */
-    padding: 12px;
+
     text-align: left; /* Align content to the left for better readability */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Elevated shadow for depth */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -33,7 +29,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between; /* Align items neatly across the header */
-    margin-bottom: 8px;
+    padding: 8px;
 }
 
 .tab-favicon {
@@ -47,7 +43,6 @@ body {
     flex: 1; /* Allow title to take up remaining space */
     font-size: 14px;
     font-weight: bold;
-    color: #333; /* Darker color for better readability */
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -75,10 +70,10 @@ body {
 
 .tab-thumbnail {
     width: 100%;
-    height: 120px; /* Larger thumbnail for better visibility */
+    /*aspect ratio set in js*/
     object-fit: cover; /* Fill the container while maintaining aspect ratio */
-    border-radius: 8px; /* Rounded corners for consistency */
-    margin-top: 8px; /* Space between header and thumbnail */
+    /* Rounded corners to the bottom left and right for consistency */
+    border-radius: 3px 3px 12px 12px ;
     /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); Subtle shadow for the image */
     background-repeat: no-repeat;
     background-position: center;
