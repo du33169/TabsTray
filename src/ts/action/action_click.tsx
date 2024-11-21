@@ -1,4 +1,4 @@
-browser.action.onClicked.addListener(function () {
+export async function action_onclick() {
 	console.log("Action Button clicked!");
 	// check if there is an existing tab with the URL of "pages/index.html"
 	const extensionPagePath = "/pages/index.html"; // Relative path to your extension page
@@ -15,7 +15,7 @@ browser.action.onClicked.addListener(function () {
 			} else if (tabs.length == 1) {
 				// If the tab is already open, switch to it
 				const existingTab = tabs[0];
-				browser.tabs.update(existingTab.id, { active: true });
+				browser.tabs.update(existingTab.id!, { active: true });
 			} else {
 				// If not, open a new tab with the extension page
 				browser.tabs.create({ url: extensionURL });
@@ -24,4 +24,4 @@ browser.action.onClicked.addListener(function () {
 		.catch((error) => {
 			console.error("Error querying tabs:", error);
 		});
-});
+}

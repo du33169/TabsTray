@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import CloseIcon from "@material-icons/svg/svg/close/round.svg"
 import NoThumbnail from "@material-icons/svg/svg/no_photography/outline.svg"
+import { tabChangeEvents } from "./utils"
 function App() {
     const [tabs, setTabs] = useState<browser.tabs.Tab[]>([]);
     useEffect(() => {
@@ -11,12 +12,12 @@ function App() {
         }
         fetchTabs();
         const onTabChanged = () => fetchTabs();//for event listener idenfitying
-        const listenEvents= [browser.tabs.onUpdated, browser.tabs.onRemoved, browser.tabs.onMoved, browser.tabs.onCreated]
+        
         // add event listeners
-        listenEvents.forEach(event => event.addListener(onTabChanged));
+        tabChangeEvents.forEach(event => event.addListener(onTabChanged));
         // clean up
         return () => {
-            listenEvents.forEach(event => event.removeListener(onTabChanged));
+            tabChangeEvents.forEach(event => event.removeListener(onTabChanged));
         }
         
     }, []);
@@ -40,7 +41,6 @@ function Tab({ tab }: { tab: browser.tabs.Tab }) {
         fetchThumbnail();
     }, [tab.id]);
 
-    const switch_to_tab = (e: React.MouseEvent) => {e.preventDefault(); browser.tabs.update(tab.id!, { active: true }) }
     return (
         <a key={tab.id} className="tab-card" href={tab.url} onClick={switch_to_tab}>
             <div className="tab-card-header">
@@ -48,7 +48,6 @@ function Tab({ tab }: { tab: browser.tabs.Tab }) {
                 <p className="tab-title">{tab.title}</p>
                 <button
                     className="tab-btn"
-                    onClick={(e: React.MouseEvent) => { e.stopPropagation(); browser.tabs.remove(tab.id!) }}
                     style={{ backgroundImage: `url(${CloseIcon})` }}
                     // other background styles are set in CSS
                 >

@@ -1,7 +1,7 @@
 {
   "entry":{
-    "js/index":"src/js/index.tsx",
-    "js/background":"src/js/background.js"
+    "js/index":"src/ts/index.tsx",
+    "js/background":"src/ts/background.tsx"
   },
   "output":{
     "path":"build"
