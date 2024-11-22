@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
-import CloseIcon from "@material-icons/svg/svg/close/round.svg"
-import NoThumbnail from "@material-icons/svg/svg/no_photography/outline.svg"
+import { MdClose, MdNoPhotography } from "react-icons/md";
 import { tabChangeEvents } from "./utils"
 function App() {
     const [tabs, setTabs] = useState<browser.tabs.Tab[]>([]);
@@ -60,19 +59,17 @@ function Tab({ tab }: { tab: browser.tabs.Tab }) {
                 <button
                     className="tab-btn"
                     onClick={close_tab}
-                    style={{ backgroundImage: `url(${CloseIcon})` }}
                     // other background styles are set in CSS
-                >
-                </button>
+                ><MdClose />
+                </button> 
             </div>
             <div
                 className="tab-thumbnail"
                 style={{
-                    backgroundImage: `url(${thumbnailUri || NoThumbnail})`,
-                    filter: thumbnailUri ? undefined : "opacity(0.5)",
+                    backgroundImage: `url(${ thumbnailUri || "" })`,
                     aspectRatio: Math.max(screen.availWidth / screen.availHeight , 4/3) ,
                 }}
-            />
+            >{thumbnailUri ? null : <MdNoPhotography size={"30%"} color="#AAA" title="Thumbnail Unavailable" />}</div>
         </a>
     )
 }
