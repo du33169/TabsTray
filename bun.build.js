@@ -15,8 +15,13 @@ fs.copy(extDir, buildDir, { recursive: true }, (err) => { if (err) throw err; })
 console.log("Building extension...");
 const result = await Bun.build({
 	root: './src',
-	entrypoints: ["./src/scripts/tray/index.tsx", "./src/scripts/background.tsx"],
+	entrypoints: [
+		"./src/pages/tray/tray.tsx",
+		"./src/pages/options/options.tsx",
+		"./src/background.tsx"
+	],
 	outdir: "./build",
+	sourcemap: "linked"
 });
 if (!result.success) {
 	console.error("Build failed");

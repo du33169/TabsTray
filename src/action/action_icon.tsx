@@ -34,7 +34,7 @@ function TabIcon({ n, color }: { n: number, color: string }) {
                 fontSize={fontSize}
                 fontWeight="bold"
                 textAnchor="middle"
-                dominant-baseline="middle"
+                dominantBaseline="middle"
                 fontFamily="Arial, sans-serif"
             >
                 {overflow? "∞" : n}

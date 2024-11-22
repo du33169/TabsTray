@@ -44,9 +44,9 @@ package manager: [bun](https://bun.sh/)
 - [x] Card size: use device screen size
 - [x] New Tab floating button
 - [ ] Option page -> Tray Page Mode Option ( tab, popup)
+- [ ] Expand Button for popup to switch to a single tab (auto hide o)
 - [ ] New (and default) Tray Page Mode Option: In-page, like a drawer, slide animated from the bottom
 - [ ] primary color bordered active tab, for popup and in-page mode
-- [ ] Expand Button for popup and in-page to switch to a single tab
 - [ ] Browser native style with emotion-js
 - [ ] Drag and Drop to move tabs (sortable-js)
 - [ ] Extension Icon

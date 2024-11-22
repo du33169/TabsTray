@@ -9,9 +9,9 @@ import {
 // import { Button } from "../components/ui/button";
 import { IconButton, Grid, GridItem } from "@chakra-ui/react";
 
-import { tabChangeEvents } from "@/scripts/utils"
+import { tabChangeEvents } from "@/utils"
 import Tab from "./tab"
-
+import { launch_options } from "../options/launch_options";
 function App() {
     const [tabs, setTabs] = useState<browser.tabs.Tab[]>([]);
     useEffect(() => {
@@ -38,7 +38,7 @@ function App() {
         <Provider>
             <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap="10px" padding="20px">
                 {tabs.map((tab) => (
-                    <GridItem asChild><Tab key={tab.id} tab={tab} /></GridItem>
+                    <GridItem key={tab.id}><Tab  tab={tab} /></GridItem>
                 ))}
             </Grid>
             <ActionBarRoot open={true}>
@@ -51,7 +51,7 @@ function App() {
                         <MdAdd />
                     </IconButton>
                     {/* <ActionBarSeparator /> */}
-                    <IconButton variant={"ghost"} >
+                    <IconButton variant={"ghost"} onClick={launch_options}>
                         <MdSettings />
                     </IconButton>
                 </ActionBarContent>

@@ -1,8 +1,6 @@
-export async function action_onclick() {
-	console.log("Action Button clicked!");
-	// check if there is an existing tab with the URL of "pages/index.html"
-	const extensionPagePath = "/pages/index.html"; // Relative path to your extension page
+export const tabChangeEvents = [browser.tabs.onUpdated, browser.tabs.onRemoved, browser.tabs.onMoved, browser.tabs.onCreated]
 
+export function open_page_singleton(extensionPagePath: string) {
 	// Get the full URL of the extension page moz-extension://<extension-internal-id>/<path>
 	const extensionURL = browser.runtime.getURL(extensionPagePath);
 
