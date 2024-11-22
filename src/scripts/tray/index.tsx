@@ -31,6 +31,9 @@ function App() {
 
     }, []);
 
+    async function new_tab() {// new empty tab
+        browser.tabs.create({});
+    }
     return (
         <Provider>
             <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap="10px" padding="20px">
@@ -44,7 +47,7 @@ function App() {
                         <MdOpenInFull />
                     </IconButton>
                     {/* <ActionBarSeparator /> */}
-                    <IconButton variant={"outline"} >
+                    <IconButton variant={"outline"} onClick={new_tab} >
                         <MdAdd />
                     </IconButton>
                     {/* <ActionBarSeparator /> */}

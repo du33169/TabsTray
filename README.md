@@ -42,7 +42,7 @@ package manager: [bun](https://bun.sh/)
 ## Todo
 
 - [x] Card size: use device screen size
-- [ ] New Tab floating button
+- [x] New Tab floating button
 - [ ] Option page -> Tray Page Mode Option ( tab, popup)
 - [ ] New (and default) Tray Page Mode Option: In-page, like a drawer, slide animated from the bottom
 - [ ] primary color bordered active tab, for popup and in-page mode
