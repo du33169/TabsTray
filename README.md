@@ -52,5 +52,5 @@ package manager: [bun](https://bun.sh/)
 - [ ] Extension Icon
 - [ ] Chrome port (thumbnail cannot be supported)
 - [ ] Publish
-- [ ] Right click menu with browser tab operations (like tree style tab)
+- [ ] [Firefox only] Right click menu with browser tab operations (menus.overrideContext)
 - [ ] Filter bar (title and url)

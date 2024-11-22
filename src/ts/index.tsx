@@ -55,7 +55,7 @@ function Tab({ tab }: { tab: browser.tabs.Tab }) {
     return (
         <a key={tab.id} className="tab-card" href={tab.url} target="_blank" onClick={switch_to_tab} >
             <div className="tab-card-header">
-                {tab.favIconUrl && (<img src={tab.favIconUrl} alt={tab.title} className="tab-favicon" />)}
+                {tab.favIconUrl && (<img src={tab.favIconUrl} className="tab-favicon" />)}
                 <p className="tab-title">{tab.title}</p>
                 <button
                     className="tab-btn"
