@@ -1,5 +1,10 @@
 import { open_page_singleton } from "@/utils";
-import {OptionsSchema, get_options} from "../options/options_schema";
+import { OptionsSchema, get_options } from "../options/options_schema";
+
+export async function launch_tray_in_tab() {
+	const TrayPagePath = "/pages/tray.html"; // Relative path to your extension page
+	await open_page_singleton(TrayPagePath); // Open the extension page in a new tab if it doesn't exist
+}
 export async function launch_tray() {
 	console.log("Launching tray");
 	const options = await get_options();
@@ -8,8 +13,7 @@ export async function launch_tray() {
 		case OptionsSchema.shape.default_launch_mode.enum.tab:
 			// check if there is an existing tab with the URL of "pages/index.html"
 			console.log("Tab mode");
-			const TrayPagePath = "/pages/tray.html"; // Relative path to your extension page
-			open_page_singleton(TrayPagePath); // Open the extension page in a new tab if it doesn't exist
+			await launch_tray_in_tab();
 			break;
 		case OptionsSchema.shape.default_launch_mode.enum.popup:
 			// Open the extension popup

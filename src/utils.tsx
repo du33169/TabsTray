@@ -1,10 +1,10 @@
 export const tabChangeEvents = [browser.tabs.onUpdated, browser.tabs.onRemoved, browser.tabs.onMoved, browser.tabs.onCreated]
 
-export function open_page_singleton(extensionPagePath: string) {
+export async function open_page_singleton(extensionPagePath: string) {
 	// Get the full URL of the extension page moz-extension://<extension-internal-id>/<path>
 	const extensionURL = browser.runtime.getURL(extensionPagePath);
 
-	browser.tabs.query({ url: extensionURL })
+	await browser.tabs.query({ url: extensionURL })
 		.then((tabs) => {
 			if (tabs.length > 1) {
 				console.warn(
