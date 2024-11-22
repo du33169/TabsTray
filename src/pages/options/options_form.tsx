@@ -10,7 +10,7 @@ import {
 import { Radio, RadioGroup } from "@/components/ui/radio"
 import { Field } from '@/components/ui/field';
 import type { Options } from './options_schema';
-import { defaultValues, OptionsSchema, optionText2Label, set_options, get_options, update_local_options } from './options_schema';
+import { defaultValues, OptionsSchema, optionText2Label, set_options, get_options } from './options_schema';
 
 // Utility function to render fields based on Zod schema
 const renderField = (
@@ -41,14 +41,15 @@ const renderField = (
 
 // Main Component
 function OptionsForm() {
-	const [formValues, setFormValues] = useState<Options>(get_options());
+	const [formValues, setFormValues] = useState<Options>(defaultValues);
 
 	useEffect(() => {
 		async function fetchOptions() {
-			const options = get_options();
+			const options = await get_options();
 			setFormValues(options);
 		}
-		update_local_options().then(fetchOptions);
+		fetchOptions();
+		// update_local_options().then(fetchOptions);
 		;
 	}, []);
 

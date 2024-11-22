@@ -2,7 +2,7 @@ import { open_page_singleton } from "@/utils";
 import {OptionsSchema, get_options} from "../options/options_schema";
 export async function launch_tray() {
 	console.log("Launching tray");
-	const options = get_options();
+	const options = await get_options();
 	
 	switch (options.default_launch_mode) {
 		case OptionsSchema.shape.default_launch_mode.enum.tab:
