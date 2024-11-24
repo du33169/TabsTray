@@ -1,13 +1,15 @@
 import { updateIcon } from "@/action/action_icon"
 import { launch_tray } from "@/pages/tray/launch_tray"
 import { tabChangeEvents } from "@/utils";
-import {get_options} from "@/pages/options/options_schema"
+import { get_options } from "@/pages/options/options_schema"
+import { background_install } from "./browserProxy/browserProxy";
+
 console.log("Background script running");
 
 // Update popup action based on options
 async function update_action_popup() {
 	const options = await get_options();
-	browser.action.setPopup({ popup: options.default_launch_mode === "popup" ? browser.runtime.getURL("/pages/tray.html") : "" });
+	browser.action.setPopup({ popup: options.launch_mode === "popup" ? browser.runtime.getURL("/pages/tray.html") : "" });
 }
 update_action_popup();
 browser.storage.onChanged.addListener(update_action_popup);
@@ -21,4 +23,4 @@ tabChangeEvents.forEach(event => { event.addListener(updateIcon) });
 browser.theme.onUpdated.addListener(updateIcon);
 updateIcon();
 
-
+background_install();

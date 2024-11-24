@@ -4,7 +4,7 @@ import OptionsSync from 'webext-options-sync';
 // Define the Zod Schema
 
 const OptionsSchema = z.object({
-	default_launch_mode: z.enum(['tab', 'popup', 'drawer']),
+	launch_mode: z.enum(['tab', 'popup', 'drawer']),
 });
 
 // Create TypeScript type from schema
@@ -12,11 +12,11 @@ type Options = z.infer<typeof OptionsSchema>;
 
 // Default values
 const defaultValues: Options = {
-	default_launch_mode: "tab",
+	launch_mode: "drawer",
 };
 
 const optionText2Label: Record<string, string> = {
-	"default_launch_mode": "Default launch mode",
+	"launch_mode": "Launch Mode",
 	"tab": "Standalone Tab",
 	"popup": "Extension Button Popup",
 	"drawer": "In-Page Drawer"

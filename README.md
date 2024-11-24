@@ -46,8 +46,9 @@ package manager: [bun](https://bun.sh/)
 - [x] Option page -> Tray Page Mode Option ( tab, popup)
 - [x] Expand Button for popup to switch to a single tab (auto hide on tab mode)
 - [ ] New (and default) Tray Page Mode Option: In-page, like a drawer, slide animated from the bottom
+- [ ] a switch to expand-fold thumbnail
 - [ ] primary color bordered active tab, for popup and in-page mode
-- [ ] Browser native style with emotion-js
+- [ ] Browser native style
 - [ ] Drag and Drop to move tabs (sortable-js)
 - [ ] Extension Icon
 - [ ] Chrome port (thumbnail cannot be supported)

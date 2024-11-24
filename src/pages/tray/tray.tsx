@@ -7,12 +7,13 @@ import {
     ActionBarRoot,
 } from "@/components/ui/action-bar"
 // import { Button } from "../components/ui/button";
-import { IconButton, Grid, GridItem } from "@chakra-ui/react";
+import { IconButton, Grid, GridItem,Box } from "@chakra-ui/react";
 
 import { tabChangeEvents } from "@/utils"
 import Tab from "./tab"
 import { launch_options } from "../options/launch_options";
 import { launch_tray_in_tab } from "./launch_tray";
+
 function App() {
     const [tabs, setTabs] = useState<browser.tabs.Tab[]>([]);
     const [expandAble, setExpandAble] = useState(false);
@@ -41,16 +42,16 @@ function App() {
 
     }, []);
 
-    async function new_tab() {// new empty tab
-
-    }
     return (
         <Provider>
+            <Box asChild minWidth={"700px"} minHeight={"600px"}>
+                {/* 800x600 is the maximal size of the popup window */}
             <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap="10px" padding="20px">
                 {tabs.map((tab) => (
                     <GridItem key={tab.id}><Tab tab={tab} /></GridItem>
                 ))}
-            </Grid>
+                </Grid>
+            </Box>
             <ActionBarRoot open={true}>
                 <ActionBarContent>
                     {expandAble &&
@@ -59,7 +60,7 @@ function App() {
                         </IconButton>
                     }
                     {/* <ActionBarSeparator /> */}
-                    <IconButton variant={"outline"} onClick={() => { browser.tabs.create({}).then(window.close) }}>
+                    <IconButton size={'lg'}  onClick={() => { browser.tabs.create({}).then(window.close) }}>
                         <MdAdd />
                     </IconButton>
                     {/* <ActionBarSeparator /> */}
@@ -68,6 +69,7 @@ function App() {
                     </IconButton>
                 </ActionBarContent>
             </ActionBarRoot>
+
         </Provider>
     );
 }
