@@ -4,11 +4,11 @@ import { MdNoPhotography } from "react-icons/md";
 import { CloseButton } from "@/components/ui/close-button";
 import { Card, Image, AspectRatio, Flex, Text, HStack, Container, Icon, Center } from "@chakra-ui/react";
 
-function Tab({ tab }: { tab: browser.tabs.Tab }) {
+function Tab({ tab, browserApiProvider=browser }: { tab: browser.tabs.Tab, browserApiProvider?: typeof browser }) {
     const [thumbnailUri, setThumbnailUri] = useState<string | null>(null); // 创建状态
     useEffect(() => {
         async function fetchThumbnail() {
-            const thumbUri = await browser.tabs.captureTab(tab.id!, { scale: 0.25 });
+            const thumbUri = await browserApiProvider.tabs.captureTab(tab.id!, { scale: 0.25 });
             setThumbnailUri(thumbUri);
         }
         fetchThumbnail();
@@ -17,13 +17,13 @@ function Tab({ tab }: { tab: browser.tabs.Tab }) {
     async function switch_to_tab(e: React.MouseEvent) {
         console.log(`switch to tab ${tab.title}`);
         e.preventDefault();
-        browser.tabs.update(tab.id!, { active: true })
+        browserApiProvider.tabs.update(tab.id!, { active: true })
     }
     async function close_tab(e: React.MouseEvent) {
         console.log(`closing tab ${tab.title}`);
         e.preventDefault(); // prevent open a new tab of <a> tag
         e.stopPropagation();
-        browser.tabs.remove(tab.id!).catch((e) => alert("Failed to close tab" + e));
+        browserApiProvider.tabs.remove(tab.id!).catch((e) => alert("Failed to close tab" + e));
     }
     const tabCss = {
         "border-radius": "12px", /* Rounded corners for modern feel */

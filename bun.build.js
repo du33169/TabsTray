@@ -16,7 +16,8 @@ console.log("Building extension...");
 const result = await Bun.build({
 	root: './src',
 	entrypoints: [
-		"./src/pages/tray/tray.tsx",
+		"./src/pages/tray/index.tsx",
+		"./src/pages/tray/tray_in_page.tsx",
 		"./src/pages/options/options.tsx",
 		"./src/background.tsx"
 	],

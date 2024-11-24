@@ -1,0 +1,6 @@
+const ACTION ={
+	BROWSER_API: "BROWSER_API",
+	BROWSER_EVENT: "BROWSER_EVENT",
+}
+
+export { ACTION };

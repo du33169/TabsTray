@@ -1,25 +1,31 @@
-export const tabChangeEvents = [browser.tabs.onUpdated, browser.tabs.onRemoved, browser.tabs.onMoved, browser.tabs.onCreated]
+export function get_tabChangeEvents(browserEventProvider = browser) {
+	return[browserEventProvider.tabs.onUpdated, browserEventProvider.tabs.onRemoved, browserEventProvider.tabs.onMoved, browserEventProvider.tabs.onCreated]
+} 
 
-export async function open_page_singleton(extensionPagePath: string) {
+export async function open_page_singleton(extensionPagePath: string, browserApiProvider: typeof browser = browser) {
 	// Get the full URL of the extension page moz-extension://<extension-internal-id>/<path>
-	const extensionURL = browser.runtime.getURL(extensionPagePath);
+	const extensionURL = browser.runtime.getURL(extensionPagePath); // this api is accesible from content script
 
-	await browser.tabs.query({ url: extensionURL })
+	return browserApiProvider.tabs.query({ url: extensionURL })
 		.then((tabs) => {
 			if (tabs.length > 1) {
 				console.warn(
 					"Multiple tabs with extension page URL found. This should not happen."
 				);
+				return Promise.reject(
+					"Multiple tabs with extension page URL found. This should not happen."
+				);
 			} else if (tabs.length == 1) {
 				// If the tab is already open, switch to it
 				const existingTab = tabs[0];
-				browser.tabs.update(existingTab.id!, { active: true });
+				return browserApiProvider.tabs.update(existingTab.id!, { active: true });
 			} else {
 				// If not, open a new tab with the extension page
-				browser.tabs.create({ url: extensionURL });
+				return browserApiProvider.tabs.create({ url: extensionURL });
 			}
 		})
 		.catch((error) => {
 			console.error("Error querying tabs:", error);
+			return Promise.reject(error);
 		});
 }

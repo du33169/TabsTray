@@ -1,78 +1,100 @@
 import { useEffect, useState } from "react";
-import ReactDOM from "react-dom/client";
 import { MdOpenInFull, MdAdd, MdSettings } from "react-icons/md";
-import { Provider } from "@/components/ui/provider"
 import {
     ActionBarContent,
     ActionBarRoot,
 } from "@/components/ui/action-bar"
 // import { Button } from "../components/ui/button";
-import { IconButton, Grid, GridItem,Box } from "@chakra-ui/react";
+import { IconButton, Grid, GridItem, Box } from "@chakra-ui/react";
 
-import { tabChangeEvents } from "@/utils"
+import { get_tabChangeEvents, open_page_singleton } from "@/utils"
 import Tab from "./tab"
-import { launch_options } from "../options/launch_options";
-import { launch_tray_in_tab } from "./launch_tray";
+import { ASSET } from "@/strings"
 
-function App() {
+const enum TrayMode{//current mode of the tray
+    TAB,POPUP,IN_PAGE
+}
+function Tray({ browserApiProvider = browser, browserEventProvider = browser }: { browserApiProvider?: typeof browser, browserEventProvider?: typeof browser }) {
     const [tabs, setTabs] = useState<browser.tabs.Tab[]>([]);
-    const [expandAble, setExpandAble] = useState(false);
+    const [mode, setMode] = useState<TrayMode>(TrayMode.TAB);
     useEffect(() => {
         // fetch tabs
         async function fetchTabs() {
-            const tabs = await browser.tabs.query({ currentWindow: true });
+            const tabs = await browserApiProvider.tabs.query({ currentWindow: true });
             setTabs(tabs);
         }
         fetchTabs();
         const onTabChanged = () => fetchTabs();//for event listener idenfitying
 
         // fetch expandAble from current tab status
-        async function fetchExpandAble() {
-            const curtab = await browser.tabs.getCurrent()
-            setExpandAble(curtab==undefined)
+        async function fetchTrayMode() {
+            if (window.location.href === browser.runtime.getURL(ASSET.PAGE.TRAY_TAB)) {
+                setMode(TrayMode.TAB);
+            }
+            else if (window.location.href === browser.runtime.getURL(ASSET.PAGE.TRAY_POPUP)) {
+                setMode(TrayMode.POPUP);
+            }
+            else {
+                setMode(TrayMode.IN_PAGE);
+            }
+            console.log(window.location.href, mode);
         }
-        fetchExpandAble();
+        fetchTrayMode();
 
         // add event listeners
-        tabChangeEvents.forEach(event => event.addListener(onTabChanged));
+        get_tabChangeEvents(browserEventProvider).forEach(event => event.addListener(onTabChanged));
         // clean up
         return () => {
-            tabChangeEvents.forEach(event => event.removeListener(onTabChanged));
+            get_tabChangeEvents(browserEventProvider).forEach(event => event.removeListener(onTabChanged));
         }
 
     }, []);
 
+    const leaveAction = mode === TrayMode.POPUP? window.close : () => { };
+    function on_expand() {
+        open_page_singleton(ASSET.PAGE.TRAY_TAB, browserApiProvider).then(
+            leaveAction
+        )
+    }
+    function on_new() {
+        browserApiProvider.tabs.create({}).then(
+            leaveAction
+        )
+    }
+    function on_settings() {
+        open_page_singleton(ASSET.PAGE.OPTIONS, browserApiProvider).then(
+            leaveAction
+        )
+    }
     return (
-        <Provider>
-            <Box asChild minWidth={"700px"} minHeight={"600px"}>
-                {/* 800x600 is the maximal size of the popup window */}
+        <Box minWidth={"700px"} minHeight={"600px"}>
+            {/* 800x600 is the maximal size of the popup window */}
             <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap="10px" padding="20px">
                 {tabs.map((tab) => (
-                    <GridItem key={tab.id}><Tab tab={tab} /></GridItem>
+                    <GridItem key={tab.id}><Tab tab={tab} browserApiProvider={browserApiProvider} /></GridItem>
                 ))}
-                </Grid>
-            </Box>
+            </Grid>
+
             <ActionBarRoot open={true}>
-                <ActionBarContent>
-                    {expandAble &&
-                        <IconButton variant={"ghost"} onClick={() => { launch_tray_in_tab().then(window.close) }} >
-                            <MdOpenInFull />
-                        </IconButton>
+                <ActionBarContent portalled={false}>
+                    {mode !== TrayMode.TAB &&
+                        (
+                            <IconButton variant={"ghost"} onClick={on_expand} >
+                                <MdOpenInFull />
+                            </IconButton>
+                        )
                     }
-                    {/* <ActionBarSeparator /> */}
-                    <IconButton size={'lg'}  onClick={() => { browser.tabs.create({}).then(window.close) }}>
+
+                    <IconButton size={'lg'} onClick={on_new}>
                         <MdAdd />
                     </IconButton>
-                    {/* <ActionBarSeparator /> */}
-                    <IconButton variant={"ghost"} onClick={() => { launch_options().then(window.close) }}>
+                    <IconButton variant={"ghost"} onClick={on_settings}>
                         <MdSettings />
                     </IconButton>
                 </ActionBarContent>
             </ActionBarRoot>
-
-        </Provider>
+        </Box>
     );
 }
 
-const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
-root.render(<App />);
+export { Tray };
