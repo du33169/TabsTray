@@ -9,7 +9,7 @@ export async function launch_tray(tab: browser.tabs.Tab) {
 		case OptionsSchema.shape.launch_mode.enum.tab:
 			// check if there is an existing tab with the URL of "pages/index.html"
 			console.log("Tab mode");
-			await open_page_singleton(ASSET.PAGE.TRAY_TAB);
+			await open_page_singleton(ASSET.PAGE.TRAY_TAB,browser,{pinned:options.pin_tray_tab});
 			break;
 		case OptionsSchema.shape.launch_mode.enum.popup:
 			// Open the extension popup

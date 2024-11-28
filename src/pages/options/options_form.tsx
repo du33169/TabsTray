@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { set, z } from 'zod';
+import { Schema, set, z } from 'zod';
 import {
 	Button,
 	Fieldset,
@@ -8,6 +8,7 @@ import {
 	Box
 } from '@chakra-ui/react';
 import { Radio, RadioGroup } from "@/components/ui/radio"
+import { Switch } from '@/components/ui/switch';
 import { Field } from '@/components/ui/field';
 import type { Options } from './options_schema';
 import { defaultValues, OptionsSchema, optionText2Label, set_options, get_options } from './options_schema';
@@ -16,7 +17,7 @@ import { defaultValues, OptionsSchema, optionText2Label, set_options, get_option
 const renderField = (
 	key: string,
 	schemaType: z.ZodTypeAny,
-	value: string,
+	value: any,
 	setValue: (key: string, newValue: any) => void
 ) => {
 	if (schemaType instanceof z.ZodEnum) {
@@ -33,6 +34,15 @@ const renderField = (
 				</HStack>
 			</RadioGroup>
 		);
+	}
+	else if (schemaType instanceof z.ZodBoolean) {
+		// Boolean type => Use Switch
+		return (
+			<Switch
+				checked={value}
+				onCheckedChange={(e) => { setValue(key, e.checked); }}
+			/>
+		)
 	}
 	console.error(`Unsupported field type: ${schemaType.constructor.name}`);
 	// Add support for other types (e.g., string, number, etc.) if needed
