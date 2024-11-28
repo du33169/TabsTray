@@ -5,7 +5,7 @@ export async function updateIcon() {
         // Get all tabs in the current window
         const tabs = await browser.tabs.query({currentWindow: true});
         const tabCount = tabs.length;
-        const color= (await browser.theme.getCurrent(browser.windows.WINDOW_ID_CURRENT)).colors!.icons!
+        const color= (await browser.theme.getCurrent()).colors!.icons!
 
         // Update the browser action icon with the SVG
         return browser.action.setIcon({ path: generate_icon_dataUrl(tabCount, color.toString()) });

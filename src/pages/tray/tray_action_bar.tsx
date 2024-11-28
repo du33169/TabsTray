@@ -10,7 +10,7 @@ import { IconButton, Show } from "@chakra-ui/react";
 
 import { open_page_singleton } from "@/utils"
 import { ASSET } from "@/strings"
-
+import { TRAY_COLORS } from "@/components/ui/theme";
 
 const enum TrayMode {//current mode of the tray
     TAB = "tab", POPUP = "popup", IN_PAGE = "in-page"
@@ -62,19 +62,20 @@ function TrayActionBar(
     }
     return (
         <ActionBarRoot open={true}>
-            <ActionBarContent portalled={false}>
+            <ActionBarContent portalled={false} colorPalette="brand" backgroundColor={TRAY_COLORS.container_background} borderColor={TRAY_COLORS.container_border}>
 
                 <Show when={mode !== TrayMode.TAB}>
-                    <IconButton variant={"ghost"} onClick={on_expand} >
+                    <IconButton variant={"ghost"} onClick={on_expand}
+                    >
                         <MdOpenInFull />
                     </IconButton>
                 </Show>
 
-                <IconButton size={'lg'} onClick={on_new}>
+                <IconButton variant={"solid"} onClick={on_new}>
                     <MdAdd />
                 </IconButton>
 
-                <IconButton variant={"ghost"} onClick={on_toggle_thumbnails}>
+                <IconButton variant={"ghost"} onClick={on_toggle_thumbnails} >
                     {showThumbnails ? <MdPhotoCamera /> : <MdNoPhotography />}
                 </IconButton>
                 <IconButton variant={"ghost"} onClick={on_settings}>

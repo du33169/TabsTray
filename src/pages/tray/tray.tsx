@@ -8,6 +8,7 @@ import { generate_icon_dataUrl } from "@/action/action_icon";
 import Tab from "./tab"
 import TrayActionBar from "./tray_action_bar";
 import { get_options,set_options } from "../options/options_schema";
+import { TRAY_COLORS } from "@/components/ui/theme";
 
 function Tray({ browserApiProvider = browser, browserEventProvider = browser }: { browserApiProvider?: typeof browser, browserEventProvider?: typeof browser }) {
     const [tabs, setTabs] = useState<browser.tabs.Tab[]>([]);
@@ -46,9 +47,11 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
 
         // add event listeners
         get_tabChangeEvents(browserEventProvider).forEach(event => event.addListener(onTabChanged));
+        browserEventProvider.theme.onUpdated.addListener(onTabChanged);
         // clean up
         return () => {
             get_tabChangeEvents(browserEventProvider).forEach(event => event.removeListener(onTabChanged));
+            browserEventProvider.theme.onUpdated.removeListener(onTabChanged);
         }
 
     }, []);
@@ -64,12 +67,15 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
     }, [showThumbnails]);
 
     return (
-        <Box minWidth={"700px"} minHeight={"600px"}>
+        <Box minWidth={"max(700px,100vw)"} minHeight={"max(600px,100vh)"}  colorPalette="brand" backgroundColor={TRAY_COLORS.global_background}>
             {/* 800x600 is the maximal size of the popup window */}
-            <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap="10px" padding="20px">
+            <Grid 
+                templateColumns="repeat(auto-fill, minmax(300px, 1fr))"  paddingX="max(40px,1vw)" paddingY="max(20px,0.5vw)">
                 {tabs.map((tab) => (
                     <GridItem key={tab.id}>
-                        <Tab tab={tab} browserApiProvider={browserApiProvider} showThumbnails={showThumbnails} />
+                        <Box padding="3%" >
+                            <Tab tab={tab} browserApiProvider={browserApiProvider} showThumbnails={showThumbnails} />
+                        </Box>
                     </GridItem>
                 ))}
             </Grid>

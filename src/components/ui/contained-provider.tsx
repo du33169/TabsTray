@@ -16,6 +16,7 @@ import {
   type ColorModeProviderProps,
 } from "@/components/ui/color-mode";
 
+import { themeConfig } from "./theme";
 // configuration for shadow dom
 function contained_system() {
   const myCssVarsRoot = "#tray-container";

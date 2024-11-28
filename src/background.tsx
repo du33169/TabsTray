@@ -3,7 +3,8 @@ import { launch_tray } from "@/pages/tray/launch_tray"
 import { get_tabChangeEvents } from "@/utils";
 import { get_options } from "@/pages/options/options_schema"
 import { server_install } from "./browserProxy/server";
-import {ASSET} from "@/strings"
+import { ASSET } from "@/strings"
+
 console.log("Background script running");
 
 // Update popup action based on options

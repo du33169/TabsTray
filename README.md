@@ -47,7 +47,7 @@ package manager: [bun](https://bun.sh/)
 - [x] Expand Button for popup to switch to a single tab (auto hide on tab mode)
 - [x] a switch to expand-fold thumbnail
 - [ ] primary color bordered active tab, for popup and in-page mode
-- [ ] Browser native style
+- [x] Browser native style
 - [ ] Drag and Drop to move tabs (sortable-js)
 - [ ] New (and default) Tray Page Mode Option: In-page, like a drawer, slide animated from the bottom
 - [ ] Extension Icon
