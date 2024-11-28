@@ -10,9 +10,10 @@ import { IconButton, Grid, GridItem, Box } from "@chakra-ui/react";
 import { get_tabChangeEvents, open_page_singleton } from "@/utils"
 import Tab from "./tab"
 import { ASSET } from "@/strings"
+import { generate_icon_dataUrl } from "@/action/action_icon";
 
 const enum TrayMode{//current mode of the tray
-    TAB,POPUP,IN_PAGE
+    TAB="tab",POPUP="popup",IN_PAGE="in-page"
 }
 function Tray({ browserApiProvider = browser, browserEventProvider = browser }: { browserApiProvider?: typeof browser, browserEventProvider?: typeof browser }) {
     const [tabs, setTabs] = useState<browser.tabs.Tab[]>([]);
@@ -20,11 +21,28 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
     useEffect(() => {
         // fetch tabs
         async function fetchTabs() {
-            const tabs = await browserApiProvider.tabs.query({ currentWindow: true });
-            setTabs(tabs);
+            const newTabs = await browserApiProvider.tabs.query({ currentWindow: true });
+            setTabs(newTabs);
+            return newTabs;
         }
-        fetchTabs();
-        const onTabChanged = () => fetchTabs();//for event listener idenfitying
+
+        async function updateIcon(tabcount:number) {
+            const iconLink:HTMLLinkElement = document.querySelector("link[rel*='icon']")!;
+            if (iconLink) {
+                const color= (await browserApiProvider.theme.getCurrent(browserApiProvider.windows.WINDOW_ID_CURRENT)).colors!.icons!
+                const iconUrl = generate_icon_dataUrl(tabcount, color.toString());
+                iconLink.href = iconUrl;
+                return iconUrl;
+            } else {
+                console.error("No icon link found");
+                return Promise.reject("No icon link found");
+            }
+        }
+        async function onTabChanged() {
+            const newTabs=await fetchTabs();
+            await updateIcon(newTabs.length);//for event listener idenfitying
+        } 
+        onTabChanged();
 
         // fetch expandAble from current tab status
         async function fetchTrayMode() {
