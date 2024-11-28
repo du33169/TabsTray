@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { MdNoPhotography } from "react-icons/md";
+import { MdNoPhotography,MdLanguage } from "react-icons/md";
 // import { Button } from "../components/ui/button";
 import { CloseButton } from "@/components/ui/close-button";
-import { Card, Image, AspectRatio, Flex, Text, HStack, Container, Icon, Center } from "@chakra-ui/react";
+import { Card, Image, AspectRatio, Flex, Text, HStack, Container, Icon, Center, Show } from "@chakra-ui/react";
 
-function Tab({ tab, browserApiProvider=browser }: { tab: browser.tabs.Tab, browserApiProvider?: typeof browser }) {
+function Tab({ tab, browserApiProvider = browser, showThumbnails }: { tab: browser.tabs.Tab, browserApiProvider?: typeof browser, showThumbnails: boolean }) {
     const [thumbnailUri, setThumbnailUri] = useState<string | null>(null); // 创建状态
     useEffect(() => {
         async function fetchThumbnail() {
@@ -36,30 +36,36 @@ function Tab({ tab, browserApiProvider=browser }: { tab: browser.tabs.Tab, brows
         }
     }
     return (
-        <Card.Root asChild css={tabCss}>
-            <a key={tab.id} className="tab-card" href={tab.url} target="_blank" onClick={switch_to_tab} >
-                <Card.Header paddingX={2} paddingY={1}> 
-                    <Container fluid padding={0} asChild>
-                        <HStack asChild>
-                            <Flex justify="space-between">
-                                {tab.favIconUrl && (<Icon size="md" margin={1}><Image src={tab.favIconUrl} className="tab-favicon" /></Icon>)}
-                                <Text truncate className="tab-title">{tab.title}</Text>
-                                <CloseButton onClick={close_tab} />
-                            </Flex>
+        <Card.Root asChild css={tabCss} >
+            <a key={tab.id}  href={tab.url} target="_blank" onClick={switch_to_tab} >
+                <Card.Header paddingX={2} paddingY={1} minH={showThumbnails ? "auto" : "5rem"} justifyContent={"center"}>
+                    <Container fluid padding={0} asChild >
+                        <HStack justify="space-between">
+                            <Icon size="md" margin={1}>
+                                {tab.favIconUrl ? (<Image src={tab.favIconUrl} />) : <MdLanguage />}
+                            </Icon>
+                            <Center>
+                                <Text truncate lineClamp={showThumbnails ? 1 : 3} >{tab.title}</Text>
+                            </Center>
+                            <CloseButton onClick={close_tab} />
                         </HStack>
                     </Container>
                 </Card.Header>
+
                 <Card.Body padding={0}>
-                    <AspectRatio ratio={Math.max(screen.availWidth / screen.availHeight, 4 / 3)}>
-                        {
-                            thumbnailUri ?
-                                <Image src={thumbnailUri} alt="Thumbnail" /> :
-                                <Center>
-                                    <MdNoPhotography size={"30%"} color="#AAA" title="Thumbnail Unavailable" />
-                                </Center>
-                        }
-                    </AspectRatio>
+                    <Show when={showThumbnails}>
+                        <AspectRatio ratio={Math.max(screen.availWidth / screen.availHeight, 4 / 3)}>
+                            {
+                                thumbnailUri ?
+                                    <Image src={thumbnailUri} alt="Thumbnail" /> :
+                                    <Center>
+                                        <MdNoPhotography size={"30%"} color="#AAA" title="Thumbnail Unavailable" />
+                                    </Center>
+                            }
+                        </AspectRatio>
+                    </Show>
                 </Card.Body>
+
                 {/* <Card.Footer /> */}
             </a>
         </Card.Root>

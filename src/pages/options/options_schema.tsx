@@ -6,6 +6,7 @@ import OptionsSync from 'webext-options-sync';
 const OptionsSchema = z.object({
 	launch_mode: z.enum(['tab', 'popup', 'drawer']),
 	pin_tray_tab: z.boolean(),
+	show_thumbnails: z.boolean(),
 });
 
 // Create TypeScript type from schema
@@ -15,6 +16,7 @@ type Options = z.infer<typeof OptionsSchema>;
 const defaultValues: Options = {
 	launch_mode: "drawer",
 	pin_tray_tab: true,
+	show_thumbnails: true,
 };
 
 const optionText2Label: Record<string, string> = {
@@ -23,6 +25,7 @@ const optionText2Label: Record<string, string> = {
 	"popup": "Extension Button Popup",
 	"drawer": "In-Page Drawer",
 	"pin_tray_tab": "Pin Tabs Tray (Tab Mode Only)",
+	"show_thumbnails": "Show Tab Thumbnails",
 };
 const optionsStorage = new OptionsSync({ defaults: defaultValues });
 
