@@ -40,7 +40,7 @@ function Tab({ browserApiProvider = browser, tab, isActive, showThumbnails }: { 
             borderWidth={isActive ? "3px" : "1px"}
         >
             <a key={tab.id} href={tab.url} target="_blank" onClick={switch_to_tab} >
-                <Card.Header paddingX={2} paddingY={1} minH={showThumbnails ? "auto" : "5rem"} justifyContent={"center"}>
+                <Card.Header padding={1.5} minH={showThumbnails ? "auto" : "5rem"} justifyContent={"center"}>
                     <Container fluid padding={0} asChild >
                         <HStack justify="space-between">
                             <Icon size="md" margin={1}>
@@ -51,7 +51,7 @@ function Tab({ browserApiProvider = browser, tab, isActive, showThumbnails }: { 
                                     {tab.title}
                                 </Text>
                             </Center>
-                            <CloseButton onClick={close_tab} />
+                            <CloseButton onClick={close_tab} borderRadius="10px"/>
                         </HStack>
                     </Container>
                 </Card.Header>

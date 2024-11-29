@@ -73,7 +73,7 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
         <Box minWidth={"min(700px,100vw)"} minHeight={"max(600px,100vh)"}  colorPalette="brand" backgroundColor={TRAY_COLORS.global_background}>
             {/* 800x600 is the maximal size of the popup window */}
             <Grid 
-                templateColumns="repeat(auto-fill, minmax(300px, 1fr))"  paddingX="max(40px,1vw)" paddingY="max(20px,0.5vw)">
+                templateColumns="repeat(auto-fill, minmax(300px, 1fr))"  paddingX="max(40px,1vw)" paddingTop="max(20px,0.5vw)">
                 {tabs.map((tab) => (
                     <GridItem key={tab.id}>
                         <Box padding="3%" >

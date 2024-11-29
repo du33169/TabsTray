@@ -32,10 +32,16 @@ function convertTheme(ThemeColors:browser._manifest._ThemeTypeColors) {
 import {BRAND_PALETTE } from "./theme";
 export function Provider(props: ColorModeProviderProps) {
   const [system, setSystem] =useState(createSystem(defaultConfig))
-
+  const [colorScheme, setColorScheme] = useState("light")
   useEffect(() => {
     async function fetchSystem() {
-      const themeColors = (await browser.theme.getCurrent()).colors!;
+      const theme = (await browser.theme.getCurrent());
+      const themeColors = theme.colors!;
+
+      setColorScheme(theme.properties!.color_scheme!);
+
+      console.log('browser theme:',theme);
+
       console.log('browsertheme colors:',themeColors);
       const config = defineConfig({
         theme: {
@@ -62,7 +68,7 @@ export function Provider(props: ColorModeProviderProps) {
   }, []);
   return (
     <ChakraProvider value={system}>
-      <ColorModeProvider {...props}/>
+      <ColorModeProvider {...props} forcedTheme={colorScheme} />
     </ChakraProvider>
   )
 }
