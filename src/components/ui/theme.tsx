@@ -54,7 +54,8 @@ interface TrayColors{
 	container_border: string,
 	container_shadow: string,
 	global_foreground: string,
-	container_hover: string
+	container_hover: string,
+	accent: string
 }
 
 const TRAY_COLORS_FIREFOX: TrayColors = {
@@ -64,6 +65,7 @@ const TRAY_COLORS_FIREFOX: TrayColors = {
 	container_shadow: FIREFOX_COLORS.popup_highlight,
 	global_foreground: FIREFOX_COLORS.popup_text,
 	container_hover: FIREFOX_COLORS.popup_border,
+	accent: FIREFOX_COLORS.button_primary
 }
 
 const BRAND_PALETTE_FIREFOX = {

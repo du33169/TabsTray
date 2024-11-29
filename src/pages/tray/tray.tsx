@@ -12,12 +12,15 @@ import { TRAY_COLORS } from "@/components/ui/theme";
 
 function Tray({ browserApiProvider = browser, browserEventProvider = browser }: { browserApiProvider?: typeof browser, browserEventProvider?: typeof browser }) {
     const [tabs, setTabs] = useState<browser.tabs.Tab[]>([]);
+    const [activeTab, setActiveTab] = useState<browser.tabs.Tab>();
     const [showThumbnails, setShowThumbnails] = useState(false);
     useEffect(() => {
         // fetch tabs
         async function fetchTabs() {
             const newTabs = await browserApiProvider.tabs.query({ currentWindow: true });
             setTabs(newTabs);
+            const currentTab = newTabs.find(tab => tab.active);
+            setActiveTab(currentTab);
             return newTabs;
         }
 
@@ -67,14 +70,14 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
     }, [showThumbnails]);
 
     return (
-        <Box minWidth={"max(700px,100vw)"} minHeight={"max(600px,100vh)"}  colorPalette="brand" backgroundColor={TRAY_COLORS.global_background}>
+        <Box minWidth={"min(700px,100vw)"} minHeight={"max(600px,100vh)"}  colorPalette="brand" backgroundColor={TRAY_COLORS.global_background}>
             {/* 800x600 is the maximal size of the popup window */}
             <Grid 
                 templateColumns="repeat(auto-fill, minmax(300px, 1fr))"  paddingX="max(40px,1vw)" paddingY="max(20px,0.5vw)">
                 {tabs.map((tab) => (
                     <GridItem key={tab.id}>
                         <Box padding="3%" >
-                            <Tab tab={tab} browserApiProvider={browserApiProvider} showThumbnails={showThumbnails} />
+                            <Tab tab={tab} browserApiProvider={browserApiProvider} showThumbnails={showThumbnails} isActive={tab.id === activeTab?.id} />
                         </Box>
                     </GridItem>
                 ))}

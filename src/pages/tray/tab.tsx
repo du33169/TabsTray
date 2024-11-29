@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { MdNoPhotography,MdLanguage } from "react-icons/md";
+import { MdNoPhotography, MdLanguage } from "react-icons/md";
 // import { Button } from "../components/ui/button";
 import { CloseButton } from "@/components/ui/close-button";
 import { Card, Image, AspectRatio, Flex, Text, HStack, Container, Icon, Center, Show } from "@chakra-ui/react";
 
-import { TRAY_COLORS} from "@/components/ui/theme";
+import { TRAY_COLORS } from "@/components/ui/theme";
 
-function Tab({ tab, browserApiProvider = browser, showThumbnails }: { tab: browser.tabs.Tab, browserApiProvider?: typeof browser, showThumbnails: boolean }) {
+function Tab({ browserApiProvider = browser, tab, isActive, showThumbnails }: { browserApiProvider?: typeof browser, tab: browser.tabs.Tab, isActive: boolean, showThumbnails: boolean }) {
     const [thumbnailUri, setThumbnailUri] = useState<string | null>(null); // 创建状态
     useEffect(() => {
         async function fetchThumbnail() {
@@ -36,9 +36,10 @@ function Tab({ tab, browserApiProvider = browser, showThumbnails }: { tab: brows
             transition="transform 0.2s ease, box-shadow 0.2s ease"
             boxShadow="0 4px 8px rgba(0, 0, 0, 0.1)" borderRadius="12px" overflow="hidden" textAlign="left"
             backgroundColor={TRAY_COLORS.container_background}
-            borderColor={TRAY_COLORS.container_border}
+            borderColor={isActive ? TRAY_COLORS.accent : TRAY_COLORS.container_border}
+            borderWidth={isActive ? "3px" : "1px"}
         >
-            <a key={tab.id}  href={tab.url} target="_blank" onClick={switch_to_tab} >
+            <a key={tab.id} href={tab.url} target="_blank" onClick={switch_to_tab} >
                 <Card.Header paddingX={2} paddingY={1} minH={showThumbnails ? "auto" : "5rem"} justifyContent={"center"}>
                     <Container fluid padding={0} asChild >
                         <HStack justify="space-between">
@@ -50,7 +51,7 @@ function Tab({ tab, browserApiProvider = browser, showThumbnails }: { tab: brows
                                     {tab.title}
                                 </Text>
                             </Center>
-                            <CloseButton onClick={close_tab}/>
+                            <CloseButton onClick={close_tab} />
                         </HStack>
                     </Container>
                 </Card.Header>
