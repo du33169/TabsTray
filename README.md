@@ -50,11 +50,11 @@ package manager: [bun](https://bun.sh/)
 - [x] Browser native style
 - [x] Drag and Drop to move tabs (sortable-js)
 - [x] Pinned tab mark
-- [ ] Keyboard shortcut
-- [ ] New (and default) Tray Page Mode Option: In-page, like a drawer, slide animated from the bottom
-- [ ] Extension Icon
+- [x] Keyboard shortcut
 - [ ] Chrome port (thumbnail cannot be supported)
 - [ ] [Firefox only] Right click menu with browser tab operations (menus.overrideContext)
+- [ ] New (and default) Tray Page Mode Option: In-page, like a drawer, slide animated from the bottom
+- [ ] Extension Icon
 - [ ] Publish
 - [ ] Multi-Drag Mode (Selection Mode)
 - [ ] Filter bar (title and url)
