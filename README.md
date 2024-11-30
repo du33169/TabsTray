@@ -48,10 +48,20 @@ package manager: [bun](https://bun.sh/)
 - [x] a switch to expand-fold thumbnail
 - [x] primary color bordered active tab
 - [x] Browser native style
-- [ ] Drag and Drop to move tabs (sortable-js)
+- [x] Drag and Drop to move tabs (sortable-js)
+- [x] Pinned tab mark
+- [ ] Keyboard shortcut
 - [ ] New (and default) Tray Page Mode Option: In-page, like a drawer, slide animated from the bottom
 - [ ] Extension Icon
 - [ ] Chrome port (thumbnail cannot be supported)
-- [ ] Publish
 - [ ] [Firefox only] Right click menu with browser tab operations (menus.overrideContext)
+- [ ] Publish
+- [ ] Multi-Drag Mode (Selection Mode)
 - [ ] Filter bar (title and url)
+
+## Know Bugs
+
+- [ ] button icon not updated on browser window switch
+- [ ] switching to pinned tab does not update focus border (popup mode)
+- [ ] sometimes title will overflow card header
+- [ ] thumbnail and card icon not updating on theme update

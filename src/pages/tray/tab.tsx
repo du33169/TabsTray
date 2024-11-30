@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { MdNoPhotography, MdLanguage } from "react-icons/md";
+import { MdLanguage, MdPushPin } from "react-icons/md";
 // import { Button } from "../components/ui/button";
 import { CloseButton } from "@/components/ui/close-button";
-import { Card, Image, AspectRatio, Flex, Text, HStack, Container, Icon, Center, Show } from "@chakra-ui/react";
+import { Card, Image, AspectRatio, Flex, Text, HStack, Container, Icon, Center, Show, Float } from "@chakra-ui/react";
 
 import { TRAY_COLORS } from "@/components/ui/theme";
 
-function Tab({ browserApiProvider = browser, tab, isActive, showThumbnails }: { browserApiProvider?: typeof browser, tab: browser.tabs.Tab, isActive: boolean, showThumbnails: boolean }) {
+function Tab({ browserApiProvider = browser, tab, showThumbnails }: { browserApiProvider?: typeof browser, tab: browser.tabs.Tab, showThumbnails: boolean }) {
     const [thumbnailUri, setThumbnailUri] = useState<string | null>(null); // 创建状态
     useEffect(() => {
         async function fetchThumbnail() {
@@ -29,15 +29,11 @@ function Tab({ browserApiProvider = browser, tab, isActive, showThumbnails }: { 
     }
     return (
         <Card.Root asChild
-            _hover={{
-                transform: "translateY(-4px)",
-                boxShadow: "0 6px 12px rgba(0, 0, 0, 0.15)",
-            }}
-            transition="transform 0.2s ease, box-shadow 0.2s ease"
-            boxShadow="0 4px 8px rgba(0, 0, 0, 0.1)" borderRadius="12px" overflow="hidden" textAlign="left"
+            boxShadow="0 4px 8px rgba(0, 0, 0, 0.1)"
+            borderRadius="12px" overflow="hidden" textAlign="left"
             backgroundColor={TRAY_COLORS.container_background}
-            borderColor={isActive ? TRAY_COLORS.accent : TRAY_COLORS.container_border}
-            borderWidth={isActive ? "3px" : "1px"}
+            borderColor={tab.active ? TRAY_COLORS.accent : TRAY_COLORS.container_border}
+            borderWidth={tab.active ? "3px" : "1px"}
         >
             <a key={tab.id} href={tab.url} target="_blank" onClick={switch_to_tab} >
                 <Card.Header padding={1.5} minH={showThumbnails ? "auto" : "5rem"} justifyContent={"center"}>
@@ -51,11 +47,10 @@ function Tab({ browserApiProvider = browser, tab, isActive, showThumbnails }: { 
                                     {tab.title}
                                 </Text>
                             </Center>
-                            <CloseButton onClick={close_tab} borderRadius="10px"/>
+                            <CloseButton onClick={close_tab} borderRadius="10px" />
                         </HStack>
                     </Container>
                 </Card.Header>
-
                 <Card.Body padding={0} >
                     <Show when={showThumbnails}>
                         <AspectRatio ratio={Math.max(screen.availWidth / screen.availHeight, 4 / 3)}>
@@ -63,7 +58,7 @@ function Tab({ browserApiProvider = browser, tab, isActive, showThumbnails }: { 
                                 thumbnailUri ?
                                     <Image src={thumbnailUri} alt="Thumbnail" /> :
                                     <Center>
-                                        <MdNoPhotography size={"30%"} color={"#AAA"} title="Thumbnail Unavailable" />
+                                        <MdLanguage size={"30%"} color={"#AAA"} title="Thumbnail Unavailable" />
                                     </Center>
                             }
                         </AspectRatio>

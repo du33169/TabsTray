@@ -22,7 +22,9 @@ const result = await Bun.build({
 		"./src/background.tsx"
 	],
 	outdir: "./build",
-	sourcemap: "linked"
+	sourcemap: "linked",
+	// sourcemap: "none",
+	// minify: true,
 });
 if (!result.success) {
 	console.error("Build failed");
