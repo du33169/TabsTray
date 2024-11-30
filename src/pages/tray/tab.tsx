@@ -10,8 +10,12 @@ function Tab({ browserApiProvider = browser, tab, showThumbnails }: { browserApi
     const [thumbnailUri, setThumbnailUri] = useState<string | null>(null); // 创建状态
     useEffect(() => {
         async function fetchThumbnail() {
-            const thumbUri = await browserApiProvider.tabs.captureTab(tab.id!, { scale: 0.25 });
-            setThumbnailUri(thumbUri);
+            //@ts-ignore
+            if (IS_FIREFOX) {
+                const thumbUri = await browserApiProvider.tabs.captureTab(tab.id!, { scale: 0.25 });
+                setThumbnailUri(thumbUri);
+            }
+            
         }
         fetchThumbnail();
     }, [tab.id]);

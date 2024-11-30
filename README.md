@@ -65,3 +65,5 @@ package manager: [bun](https://bun.sh/)
 - [ ] switching to pinned tab does not update focus border (popup mode)
 - [ ] sometimes title will overflow card header
 - [ ] thumbnail and card icon not updating on theme update
+- [ ] Drag-Drop not effective on chrome-based browsers
+- [ ] Dynamic Icon not supported on chrome-based browsers

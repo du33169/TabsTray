@@ -3,6 +3,7 @@
   "devDependencies": {
     "@types/bun": "latest",
     "@types/firefox-webext-browser": "^120.0.4",
+    "@types/fs-extra": "^11.0.4",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@types/sortablejs": "^1.15.8"
@@ -24,7 +25,8 @@
     "zod": "^3.23.8"
   },
   "scripts": {
-    "dev": "bun run bun.build.js",
-    "build": "bun run bun.build.js"
+    "build": "bun run bun.build.tsx firefox",
+    "build firefox": "bun run bun.build.tsx firefox",
+    "build chrome": "bun run bun.build.tsx chrome"
   }
 }

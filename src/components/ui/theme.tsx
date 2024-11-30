@@ -82,4 +82,13 @@ const TRAY_COLORS = TRAY_COLORS_FIREFOX;
 
 //@ts-ignore CURRENT_BROWSER defined in build script
 const BRAND_PALETTE = BRAND_PALETTE_FIREFOX;//CURRENT_BROWSER === "firefox" ? FIREFOX_COLORS_FIREFOX : FIREFOX_COLORS_CHROME;
-export {TRAY_COLORS, BRAND_PALETTE}
+
+
+async function get_fg_color(browserApiProvider: typeof browser=browser) {
+	// @ts-ignore
+	if (IS_FIREFOX) {
+		return (await browserApiProvider.theme.getCurrent()).colors!.icons!
+	}
+	else return '#000000';//window.matchMedia('(prefers-color-scheme: dark)').matches? '#ffffff' : '#000000';
+}
+export {TRAY_COLORS, BRAND_PALETTE, get_fg_color}

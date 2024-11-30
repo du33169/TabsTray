@@ -1,11 +1,13 @@
 import ReactDOMServer from 'react-dom/server';
-import {ASSET} from "@/strings"
+import { get_tabChangeEvents } from "@/utils";
+import { get_fg_color } from '@/components/ui/theme';
 export async function updateIcon() {
     try {
         // Get all tabs in the current window
         const tabs = await browser.tabs.query({currentWindow: true});
         const tabCount = tabs.length;
-        const color= (await browser.theme.getCurrent()).colors!.icons!
+
+        const color = await get_fg_color();
 
         // Update the browser action icon with the SVG
         return browser.action.setIcon({ path: generate_icon_dataUrl(tabCount, color.toString()) });
@@ -17,10 +19,12 @@ export async function updateIcon() {
 }
 
 export function generate_icon_dataUrl(n: number, color: string) {
-
     // Generate the SVG string using React
     const svgString = ReactDOMServer.renderToString(<TabIcon n={n} color={color.toString()} />);
-    return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`
+    // Convert the SVG string to a Base64-encoded data URL
+    const base64String = btoa(unescape(encodeURIComponent(svgString))); // Base64 encoding
+
+    return `data:image/svg+xml;base64,${base64String}`;
 }
 // React Component to create the SVG
 function TabIcon({ n, color }: { n: number, color: string }) {
@@ -47,5 +51,13 @@ function TabIcon({ n, color }: { n: number, color: string }) {
             </text>
         </svg>
     );
+}
+
+export function update_icon_on_theme_install() {
+    // Update icon on tab change
+    get_tabChangeEvents().forEach(event => { event.addListener(updateIcon) });
+    //@ts-ignore
+    IS_FIREFOX &&browser.theme.onUpdated.addListener(updateIcon);
+    updateIcon();
 }
 

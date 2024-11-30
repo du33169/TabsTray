@@ -8,7 +8,7 @@ import { generate_icon_dataUrl } from "@/action/action_icon";
 import Tab from "./tab"
 import TrayActionBar from "./tray_action_bar";
 import { get_options, set_options } from "../options/options_schema";
-import { TRAY_COLORS } from "@/components/ui/theme";
+import { TRAY_COLORS,get_fg_color } from "@/components/ui/theme";
 
 interface SortableTabData {
     id: number;
@@ -32,7 +32,7 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
         async function updateIcon(tabcount: number) {
             const iconLink: HTMLLinkElement = document.querySelector("link[rel*='icon']")!;
             if (iconLink) {
-                const color = (await browserApiProvider.theme.getCurrent(browserApiProvider.windows.WINDOW_ID_CURRENT)).colors!.icons!
+                const color = await get_fg_color();
                 const iconUrl = generate_icon_dataUrl(tabcount, color.toString());
                 iconLink.href = iconUrl;
                 return iconUrl;
@@ -43,7 +43,8 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
         }
         async function onTabChanged() {
             const newTabs = await fetchTabs();
-            await updateIcon(newTabs.length);//for event listener idenfitying
+            //@ts-ignore
+            IS_FIREFOX && await updateIcon(newTabs.length);//for event listener idenfitying
         }
         onTabChanged();
 
@@ -55,11 +56,13 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
 
         // add event listeners
         get_tabChangeEvents(browserEventProvider).forEach(event => event.addListener(onTabChanged));
-        browserEventProvider.theme.onUpdated.addListener(onTabChanged);
+        //@ts-ignore
+        IS_FIREFOX && browserEventProvider.theme.onUpdated.addListener(onTabChanged);
         // clean up
         return () => {
             get_tabChangeEvents(browserEventProvider).forEach(event => event.removeListener(onTabChanged));
-            browserEventProvider.theme.onUpdated.removeListener(onTabChanged);
+            //@ts-ignore
+            IS_FIREFOX && browserEventProvider.theme.onUpdated.removeListener(onTabChanged);
         }
 
     }, []);

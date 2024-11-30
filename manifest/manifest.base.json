@@ -19,18 +19,9 @@
     "default_icon": "icons/icon.svg",
     "default_title": "Tabs Tray"
   },
-  "background": {
-    "scripts": [
-      "background.js"
-    ]
-  },
+
   "options_ui": {
       "page": "/pages/options.html"
-  },
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "addon@example.com"
-    }
   },
   "commands":{
     "_execute_action":{

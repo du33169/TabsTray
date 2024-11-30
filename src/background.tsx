@@ -1,4 +1,4 @@
-import { updateIcon } from "@/action/action_icon"
+import { update_icon_on_theme_install } from "@/action/action_icon"
 import { launch_tray } from "@/pages/tray/launch_tray"
 import { get_tabChangeEvents } from "@/utils";
 import { get_options } from "@/pages/options/options_schema"
@@ -19,9 +19,8 @@ browser.storage.onChanged.addListener(update_action_popup);
 browser.action.onClicked.addListener(launch_tray);
 browser.action.onClicked.addListener(() => console.log("action clicked"))
 
-// Update icon on tab change
-get_tabChangeEvents().forEach(event => { event.addListener(updateIcon) });
-browser.theme.onUpdated.addListener(updateIcon);
-updateIcon();
+//@ts-ignore
+update_icon_on_theme_install();
+
 
 server_install();

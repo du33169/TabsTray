@@ -14,9 +14,10 @@ type Options = z.infer<typeof OptionsSchema>;
 
 // Default values
 const defaultValues: Options = {
-	launch_mode: "drawer",
+	launch_mode: "tab",
 	pin_tray_tab: true,
-	show_thumbnails: true,
+	//@ts-ignore
+	show_thumbnails: IS_FIREFOX ? true: false,
 };
 
 const optionText2Label: Record<string, string> = {

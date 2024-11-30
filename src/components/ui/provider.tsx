@@ -58,13 +58,14 @@ export function Provider(props: ColorModeProviderProps) {
       setSystem(newSystem);
       console.log('chakra theme config updated:',config.theme!.semanticTokens!.colors);
     }
-    fetchSystem();
-
-    browser.theme.onUpdated.addListener(fetchSystem);
-
-    return () => {
-      browser.theme.onUpdated.removeListener(fetchSystem);
-    };
+    //@ts-ignore
+    if (IS_FIREFOX) {
+      fetchSystem();
+      browser.theme.onUpdated.addListener(fetchSystem);   
+      return () => {
+        browser.theme.onUpdated.removeListener(fetchSystem);
+      };
+    }
   }, []);
   return (
     <ChakraProvider value={system}>
