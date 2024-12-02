@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { MdLanguage, MdPushPin } from "react-icons/md";
+import { MdLanguage } from "react-icons/md";
 // import { Button } from "../components/ui/button";
 import { CloseButton } from "@/components/ui/close-button";
-import { Card, Image, AspectRatio, Flex, Text, HStack, Container, Icon, Center, Show, Float } from "@chakra-ui/react";
+import { Card, Image, AspectRatio, Text, HStack, Container, Icon, Center, Show, Box } from "@chakra-ui/react";
 
 import { TRAY_COLORS } from "@/components/ui/theme";
 
@@ -15,7 +15,7 @@ function Tab({ browserApiProvider = browser, tab, showThumbnails }: { browserApi
                 const thumbUri = await browserApiProvider.tabs.captureTab(tab.id!, { scale: 0.25 });
                 setThumbnailUri(thumbUri);
             }
-            
+
         }
         fetchThumbnail();
     }, [tab.id]);
@@ -39,12 +39,15 @@ function Tab({ browserApiProvider = browser, tab, showThumbnails }: { browserApi
             borderColor={tab.active ? TRAY_COLORS.accent : TRAY_COLORS.container_border}
             borderWidth={tab.active ? "3px" : "1px"}
         >
-            <a key={tab.id} href={tab.url} target="_blank" onClick={switch_to_tab} >
+            <a key={tab.id} href={tab.url} target="_blank" onClick={switch_to_tab} className="tab-card" data-tab-id={tab.id}>
                 <Card.Header padding={1.5} minH={showThumbnails ? "auto" : "5rem"} justifyContent={"center"}>
                     <Container fluid padding={0} asChild >
                         <HStack justify="space-between">
                             <Icon size="md" margin={1}>
-                                {tab.favIconUrl ? (<Image src={tab.favIconUrl} />) : (<MdLanguage />)}
+                                {
+                                    tab.favIconUrl ? (<Image src={tab.favIconUrl} />) : (<span><MdLanguage /></span>)
+                                    //why using span: https://github.com/chakra-ui/chakra-ui/issues/9108
+                                }
                             </Icon>
                             <Center asChild>
                                 <Text truncate textStyle="sm" lineClamp={showThumbnails ? 1 : 3} color={TRAY_COLORS.global_foreground}>
