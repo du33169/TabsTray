@@ -15,14 +15,12 @@ interface SortableTabData {
     tab: browser.tabs.Tab;
 }
 function Tray({ browserApiProvider = browser, browserEventProvider = browser }: { browserApiProvider?: typeof browser, browserEventProvider?: typeof browser }) {
-    const [mode, setMode] = useState<TrayMode | null>(null);
+    const mode = fetchTrayMode();
     const [tabs, setTabs] = useState<browser.tabs.Tab[]>([]);
-    const [showThumbnails, setShowThumbnails] = useState(false);
+    const [showThumbnails, setShowThumbnails] = useState<boolean | null>(null);
 
     const [sortableTabDataList, setSortableTabDataList] = useState<SortableTabData[]>([]);
     useEffect(() => {
-        //mode 
-        fetchTrayMode().then(setMode);
         // fetch tabs
         async function fetchTabs() {
             const newTabs = await browserApiProvider.tabs.query({ currentWindow: true });
@@ -71,14 +69,12 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
     }, []);
 
     //update options when show_thumbnails changed
-    useEffect(() => {
-        async function updateOptions() {
-            const options = await get_options();
-            options.show_thumbnails = showThumbnails;
-            await set_options(options);
-        }
-        updateOptions();
-    }, [showThumbnails]);
+    async function manual_set_show_thumbnails(newShowThumbnails: boolean) {
+        setShowThumbnails(newShowThumbnails);
+        const options = await get_options();
+        options.show_thumbnails = newShowThumbnails;
+        await set_options(options);
+    }
 
     async function move_tab(event: Sortable.SortableEvent) {
         const tabData = sortableTabDataList[event.oldIndex!]
@@ -125,7 +121,7 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
                                 }}
                                 transition="transform 0.2s ease"
                             >
-                                <Tab tab={tabData.tab} browserApiProvider={browserApiProvider} showThumbnails={showThumbnails} />
+                                <Tab tab={tabData.tab} browserApiProvider={browserApiProvider} showThumbnails={showThumbnails===true} />
                                 <Show when={tabData.tab.pinned}>
                                     <Float placement="top-start" transform="rotate(-45deg)" translate="+10% +10%">
                                         <MdPushPin size={"20px"} />
@@ -136,7 +132,7 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
                     ))}
                 </ReactSortable>
             </Grid>
-            <TrayActionBar browserApiProvider={browserApiProvider} showThumbnails={showThumbnails} setShowThumbnails={setShowThumbnails} />
+            <TrayActionBar browserApiProvider={browserApiProvider} showThumbnails={showThumbnails} setShowThumbnails={manual_set_show_thumbnails} />
         </Box>
     );
 }

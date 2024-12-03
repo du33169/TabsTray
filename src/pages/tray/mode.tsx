@@ -5,7 +5,7 @@ const enum TrayMode {//current mode of the tray
 }
 
 // fetch expandAble from current tab status
-async function fetchTrayMode(): Promise<TrayMode> {
+function fetchTrayMode(): TrayMode {
 	if (window.location.href === browser.runtime.getURL(ASSET.PAGE.TRAY_TAB)) {
 		return (TrayMode.TAB);
 	}

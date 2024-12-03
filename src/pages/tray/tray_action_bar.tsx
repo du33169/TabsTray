@@ -15,12 +15,12 @@ import { TrayMode,fetchTrayMode } from "./mode";
 
 function TrayActionBar(
     { browserApiProvider = browser, showThumbnails, setShowThumbnails }:
-    { browserApiProvider?: typeof browser, showThumbnails: boolean, setShowThumbnails: (show: boolean) => void }
+    { browserApiProvider?: typeof browser, showThumbnails: boolean | null, setShowThumbnails: (show: boolean) => void }
 ) {
     const [mode, setMode] = useState<TrayMode>(TrayMode.TAB);
 
     useEffect(() => {
-        fetchTrayMode().then(setMode);
+        setMode(fetchTrayMode());
     }, []);
 
     const leaveAction = mode === TrayMode.POPUP ? window.close : () => { };
