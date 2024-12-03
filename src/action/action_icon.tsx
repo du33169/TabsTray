@@ -1,13 +1,13 @@
 import ReactDOMServer from 'react-dom/server';
 import { get_tabChangeEvents } from "@/utils";
-import { get_fg_color } from '@/components/ui/theme';
+import { get_icon_color } from '@/components/ui/theme';
 export async function updateIcon() {
     try {
         // Get all tabs in the current window
         const tabs = await browser.tabs.query({currentWindow: true});
         const tabCount = tabs.length;
 
-        const color = await get_fg_color();
+        const color = await get_icon_color();
 
         // Update the browser action icon with the SVG
         return browser.action.setIcon({ path: generate_icon_dataUrl(tabCount, color.toString()) });

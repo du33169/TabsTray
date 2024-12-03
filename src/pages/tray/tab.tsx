@@ -64,8 +64,8 @@ function Tab({ browserApiProvider = browser, tab, showThumbnails }: { browserApi
                             {
                                 thumbnailUri ?
                                     <Image src={thumbnailUri} alt="Thumbnail" /> :
-                                    <Center>
-                                        <MdLanguage size={"30%"} color={"#AAA"} title="Thumbnail Unavailable" />
+                                    <Center color={`${TRAY_COLORS.global_foreground}/40`}>
+                                        <MdLanguage size={"30%"}  title="Thumbnail Unavailable" />
                                     </Center>
                             }
                         </AspectRatio>

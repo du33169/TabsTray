@@ -8,7 +8,7 @@ import { generate_icon_dataUrl } from "@/action/action_icon";
 import Tab from "./tab"
 import TrayActionBar from "./tray_action_bar";
 import { get_options, set_options } from "../options/options_schema";
-import { TRAY_COLORS,get_fg_color } from "@/components/ui/theme";
+import { TRAY_COLORS,get_icon_color } from "@/components/ui/theme";
 import { TrayMode,fetchTrayMode } from "./mode";
 interface SortableTabData {
     id: number;
@@ -33,7 +33,7 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
         async function updateIcon(tabcount: number) {
             const iconLink: HTMLLinkElement = document.querySelector("link[rel*='icon']")!;
             if (iconLink) {
-                const color = await get_fg_color(browserApiProvider);
+                const color = await get_icon_color(browserApiProvider);
                 const iconUrl = generate_icon_dataUrl(tabcount, color.toString());
                 iconLink.href = iconUrl;
                 return iconUrl;

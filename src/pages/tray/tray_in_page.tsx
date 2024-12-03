@@ -38,7 +38,7 @@ function TrayDrawer({ onClose }: { onClose: () => void }) {
 			<DrawerContent
 				portalled={false} colorPalette="brand" 
 				backgroundColor={TRAY_COLORS.global_background} color={TRAY_COLORS.global_foreground}
-				roundedTop={"lg"}
+				roundedTop={"2xl"}
 				maxH={"90vh"}
 			>
 				<DrawerHeader borderColor={TRAY_COLORS.container_border}>
