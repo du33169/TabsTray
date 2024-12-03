@@ -84,7 +84,7 @@ export function Provider(props: ProviderProps) {
       setSystem(newSystem);
     }
     fetchSystem();
-  }, [enableShadow, themeConfigContent]);
+  }, [enableShadow, themeConfigContent,colorScheme]);
   //
   return enableShadow ? (
     <root.div ref={setShadow}>

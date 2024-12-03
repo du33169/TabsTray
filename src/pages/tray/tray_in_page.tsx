@@ -74,10 +74,11 @@ function launch_tray_in_page() {
 	const rootElement = getRootContainerElement();
 	const root = ReactDOM.createRoot(rootElement);
 	function onClose() {
+		port.disconnect();
 		const containerNow = document.getElementById("tray-container");
 		console.log("onClose");
 		containerNow!.remove();
-		port.disconnect();
+
 	}
 	root.render(
 		<App onClose={onClose} />

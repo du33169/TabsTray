@@ -25,7 +25,8 @@ const browserApi = new Proxy(
 	}
 );
 
-const eventListeners = new Map();
+// JSON.stringify<api,event> => callback[]
+const eventListeners = new Map<string,Array<() => void>>();
 const browserEvent = new Proxy(
 	{},
 	{
@@ -41,22 +42,38 @@ const browserEvent = new Proxy(
 									console.log('browser event call:', api, event, method, 'on port:', port);
 									if (method === 'addListener') {
 										return (callback: () => void) => {
-											eventListeners.set(`${api.toString()}.${event.toString()}`, callback);
-											port.postMessage({
-												action: ACTION.BROWSER_EVENT_ADD,
-												api: api,
-												event: event,
-											});
+											const callbackList = eventListeners.get(JSON.stringify([api, event]));
+											if (!callbackList) {
+												eventListeners.set(JSON.stringify([api, event]), [callback]);
+												port.postMessage({
+													action: ACTION.BROWSER_EVENT_ADD,
+													api: api,
+													event: event,
+												});
+											} else {//already registered
+												callbackList.push(callback);
+											}
+											console.log('saved callbacks:', eventListeners);
 										}
 									}
 									else if (method ==='removeListener') {
 										return (callback: () => void) => {
-											eventListeners.delete(`${api.toString()}.${event.toString()}`);
-											port.postMessage({
-												action: ACTION.BROWSER_EVENT_REMOVE,
-												api: api,
-												event: event,
-											});
+											const callbackList = eventListeners.get(JSON.stringify([api, event]));
+											if (callbackList) {
+												const index = callbackList.indexOf(callback);
+												if (index >= 0) {
+													callbackList.splice(index, 1);
+												} else {// all clear
+													port.postMessage({
+														action: ACTION.BROWSER_EVENT_REMOVE,
+														api: api,
+														event: event,
+													});
+												}
+											} else {
+												console.error('No callback found for:', api, event, callback);
+											}
+											console.log('saved callbacks:', eventListeners);
 										}
 									}
 									else {
@@ -77,9 +94,12 @@ function handleMessage(message: any) {
 	if (action === ACTION.BROWSER_EVENT_ADD) {
 		const { api, event, args } = rest;
 		console.log('browser event callback:', api, event, args)
-		const callback = eventListeners.get(`${api.toString()}.${event.toString()}`);
-		if (callback) {
-			callback(...args);
+		const callbackList = eventListeners.get(JSON.stringify([api, event]));
+		console.log(eventListeners, 'saved callbacks:', callbackList);
+		if (callbackList) {
+			callbackList.forEach((callback: (...args: any) => void) => {
+				callback(...args);
+			});
 		} else {
 			console.error('No callback found for:', api, event);
 		}
@@ -91,6 +111,18 @@ function client_install(portName: string) {
 	port = browser.runtime.connect({ name: portName });
 	port.onMessage.addListener(handleMessage);
 	console.log('connected to port:', port);
+	port.onDisconnect.addListener(() => {
+		eventListeners.forEach((callbackList, tuple) => {
+			const [api, event] = JSON.parse(tuple);
+			port.postMessage({
+				action: ACTION.BROWSER_EVENT_REMOVE,
+				api,
+				event,
+			});
+		});
+		eventListeners.clear();
+		console.log('disconnected from port:', port);
+	});
 	return port;
 }
 
