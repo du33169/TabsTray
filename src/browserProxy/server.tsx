@@ -16,17 +16,24 @@ async function handle_api(api: string, method: string, args: any[]) {
 	}
 }
 
-async function handle_event(port:browser.runtime.Port, api: string, event: string) {
+async function handle_event(port:browser.runtime.Port, api: string, event: string, action: string) {
 	console.log(`Registering browser event ${api}.${event}`);
 	if (browser[api] && browser[api][event]) {
-		browser[api][event].addListener((...args) => {
+		const listener = (...args) => {
 			port.postMessage({
-				action: ACTION.BROWSER_EVENT,
+				action: ACTION.BROWSER_EVENT_ADD,
 				api,
 				event,
 				args,
 			});
-		});
+		}
+		if (action === ACTION.BROWSER_EVENT_ADD) {
+			browser[api][event].addListener(listener);
+		} else if (action === ACTION.BROWSER_EVENT_REMOVE) {
+			browser[api][event].removeListener(listener);
+		} else {
+			console.error(`Unknown action ${action}`);
+		}
 	} else {
 		console.error(`Event ${event} not found`);
 	}
@@ -38,9 +45,9 @@ function handle_message_factory(port: browser.runtime.Port) {
 		if (action === ACTION.BROWSER_API) {
 			const { api, method, args } = rest;
 			return handle_api(api, method, args);
-		} else if (action === ACTION.BROWSER_EVENT) {
+		} else if (action === ACTION.BROWSER_EVENT_ADD || action === ACTION.BROWSER_EVENT_REMOVE) {
 			const { api, event } = rest;
-			return handle_event(port,api, event);
+			return handle_event(port,api, event, action);
 		} else {
 			console.error(`Unknown action ${action}`);
 		}
@@ -49,13 +56,18 @@ function handle_message_factory(port: browser.runtime.Port) {
 
 function handle_connect(port:browser.runtime.Port) {
 	console.log(`Connected to content script on port ${port.name}`);
-	port.onMessage.addListener(handle_message_factory(port));
-	browser.runtime.onMessage.addListener(handle_message_factory(port));
+	const message_handler = handle_message_factory(port);
+	port.onMessage.addListener(message_handler);
+	browser.runtime.onMessage.addListener(message_handler);
+	port.onDisconnect.addListener(() => {
+		console.log(`Disconnected from content script on port ${port.name}`);
+		browser.runtime.onMessage.removeListener(message_handler);
+	});
+
 }
 
 
 function server_install() {
-	
 	browser.runtime.onConnect.addListener(handle_connect);
 }
 

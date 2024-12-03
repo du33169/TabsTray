@@ -43,7 +43,17 @@ const browserEvent = new Proxy(
 										return (callback: () => void) => {
 											eventListeners.set(`${api.toString()}.${event.toString()}`, callback);
 											port.postMessage({
-												action: ACTION.BROWSER_EVENT,
+												action: ACTION.BROWSER_EVENT_ADD,
+												api: api,
+												event: event,
+											});
+										}
+									}
+									else if (method ==='removeListener') {
+										return (callback: () => void) => {
+											eventListeners.delete(`${api.toString()}.${event.toString()}`);
+											port.postMessage({
+												action: ACTION.BROWSER_EVENT_REMOVE,
 												api: api,
 												event: event,
 											});
@@ -64,7 +74,7 @@ const browserEvent = new Proxy(
 
 function handleMessage(message: any) {
 	const { action, ...rest } = message;
-	if (action === ACTION.BROWSER_EVENT) {
+	if (action === ACTION.BROWSER_EVENT_ADD) {
 		const { api, event, args } = rest;
 		console.log('browser event callback:', api, event, args)
 		const callback = eventListeners.get(`${api.toString()}.${event.toString()}`);
@@ -81,6 +91,7 @@ function client_install(portName: string) {
 	port = browser.runtime.connect({ name: portName });
 	port.onMessage.addListener(handleMessage);
 	console.log('connected to port:', port);
+	return port;
 }
 
 export { browserApi , browserEvent, client_install };

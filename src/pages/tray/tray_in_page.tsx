@@ -54,21 +54,25 @@ function App({ onClose }: { onClose: () => void }) {
 	)
 }
 
-console.log("launch Tray in Drawer");
-client_install("tray-in-drawer");
-function getRootContainerElement() {
-	const container = document.createElement("div");
-	container.id = "tray-container";
-	document.body.appendChild(container);
-	return container;
+function launch_tray_in_page() {
+	console.log("launch Tray in Drawer");
+	const port=client_install("tray-in-drawer");
+	function getRootContainerElement() {
+		const container = document.createElement("div");
+		container.id = "tray-container";
+		document.body.appendChild(container);
+		return container;
+	}
+	const rootElement = getRootContainerElement();
+	const root = ReactDOM.createRoot(rootElement);
+	function onClose() {
+		const containerNow = document.getElementById("tray-container");
+		console.log("onClose");
+		containerNow!.remove();
+		port.disconnect();
+	}
+	root.render(
+		<App onClose={onClose} />
+	);
 }
-const rootElement = getRootContainerElement();
-const root = ReactDOM.createRoot(rootElement);
-function onClose() {
-	const containerNow = document.getElementById("tray-container");
-	console.log("onClose");
-	containerNow!.remove();
-}
-root.render(
-	<App onClose={onClose} />
-);
+launch_tray_in_page();
