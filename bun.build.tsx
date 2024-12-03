@@ -11,14 +11,10 @@ if (browserTarget !== "chrome" && browserTarget !== "firefox") {
 	process.exit(1);
 }
 const isFirefox = browserTarget.toLowerCase() === "firefox";
-const buildConfig: BuildConfig = {
+
+const commonBuildConfig: BuildConfig = {
 	root: './src',
-	entrypoints: [
-		"./src/pages/tray/index.tsx",
-		"./src/pages/tray/tray_in_page.tsx",
-		"./src/pages/options/options.tsx",
-		"./src/background.tsx"
-	],
+	entrypoints:[],
 	outdir: "./build",
 	sourcemap: "linked",
 	define: isFirefox ? {
@@ -32,10 +28,30 @@ const buildConfig: BuildConfig = {
 	// sourcemap: "none",
 	// minify: true,
 }
+const extScript_BuildConfig: BuildConfig = {
+	...commonBuildConfig,
+	entrypoints: [
+		"./src/pages/tray/index.tsx",
+		"./src/pages/options/options.tsx",
+		"./src/background.tsx"
+	],
+}
+const contentScript_BuildConfig: BuildConfig = {
+	...commonBuildConfig,
+	entrypoints: [
+		"./src/pages/tray/tray_in_page.tsx",
+	],
+	format: "iife"
+}
+const buildConfigs = {
+	"Extension Script": extScript_BuildConfig,
+	"Content Script": contentScript_BuildConfig,
+}
 //
 function clean_build_folder() {
 	console.log("Cleaning build folder...");
 	fs.rmdirSync(buildDir, { recursive: true });
+	fs.mkdirSync(buildDir);
 }
 //
 function copy_extension_files() {
@@ -50,24 +66,45 @@ function gererate_manifest() {
 	const baseManifest = JSON.parse(fs.readFileSync(baseManifestFile, "utf-8"));
 	const firefoxManifest = JSON.parse(fs.readFileSync(firefoxManifestFile, "utf-8"));
 	const chromeManifest = JSON.parse(fs.readFileSync(chromeManifestFile, "utf-8"));
-	const manifest = {
-		...baseManifest,
-		...(isFirefox ? firefoxManifest : chromeManifest)
-	};
+
+	function merge_mainfest(base: object|Array<any>, source:object|Array<any> ) {
+		if (Array.isArray(base)) {
+			return base.concat(source);
+		} else if (typeof base === "object") {
+			const result = {...base};
+			for (const key in source) {
+				if (key in base) {//@ts-ignore
+					result[key] = merge_mainfest(base[key], source[key]);
+				} else {//@ts-ignore
+					result[key] = source[key];
+				}
+			}
+			return result;
+		} else {
+			console.error("Unsupported manifest type");
+			process.exit(1);
+			return null;
+		}
+	
+	}
+	const manifest = merge_mainfest(baseManifest, isFirefox ? firefoxManifest : chromeManifest);
 	fs.writeFileSync(path.join(buildDir, "manifest.json"), JSON.stringify(manifest, null, 4));
 }
 // 
 async function build_extension() {
 	console.log("Building extension...");
-	const result = await Bun.build(buildConfig);
-	if (!result.success) {
-		console.error("Build failed");
-		for (const message of result.logs) {
-			// Bun will pretty print the message object
-			console.error(message);
+	Object.entries(buildConfigs).forEach(async ([name, config]) => {
+		console.log(`Building ${name}...`);
+		const result = await Bun.build(config);
+		if (!result.success) {
+			console.error(`Build ${name} failed`);
+			for (const message of result.logs) {
+				// Bun will pretty print the message object
+				console.error(message);
+			}
 		}
-	}
-	console.log("Build successful");
+		console.log(`Build ${name} successful`);
+	});
 }
 
 async function main() {

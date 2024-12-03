@@ -4,7 +4,8 @@ import {
   ColorModeProvider,
   type ColorModeProviderProps,
 } from "./color-mode"
-
+import createCache from "@emotion/cache"
+import { CacheProvider } from "@emotion/react"
 import {
   ChakraProvider,
   defaultSystem,
@@ -12,62 +13,92 @@ import {
   defaultConfig,
   createSystem,
   Portal,
+  EnvironmentProvider,
+  type SystemConfig,
 } from "@chakra-ui/react";
+import root from "react-shadow"
 
-function convertTheme(ThemeColors:browser._manifest._ThemeTypeColors) {
-  const result: Record<string, any> = {};
+import { get_theme_config_content } from "./theme";
 
-  for (const [key, value] of Object.entries(ThemeColors)) {
-    if (value) {
-      // Assuming value contains `_light` and `_dark` or is directly a color.
-      // Modify this logic based on your value structure.
-      const transformedValue = { _light: value, _dark: value }
+const varRoot = ":host"
 
-      result[key]= { value: transformedValue };
-    }
-  }
-  return result;
+const shadowConfigContent: SystemConfig = {
+  cssVarsRoot: varRoot,
+  conditions: {
+    light: `${varRoot} &, .light &`,
+  },
+  preflight: { scope: varRoot },
+  globalCss: {
+    [varRoot]: defaultConfig.globalCss?.html ?? {},
+  },
 }
 
-import {BRAND_PALETTE } from "./theme";
-export function Provider(props: ColorModeProviderProps) {
-  const [system, setSystem] =useState(createSystem(defaultConfig))
+interface ProviderProps extends ColorModeProviderProps {
+  browserApiProvider?: typeof browser | undefined,
+  browserEventProvider?: typeof browser | undefined,
+  enableShadow?: boolean | undefined
+}
+export function Provider(props: ProviderProps) {
+  const { browserApiProvider, browserEventProvider, enableShadow } = props
+  const browserApi = browserApiProvider || browser;
+  const browserEvent = browserEventProvider || browser;
+  //shadow related
+  const [shadow, setShadow] = useState<HTMLElement | null>(null)
+  const [cache, setCache] = useState<ReturnType<typeof createCache> | null>(null)
+
+  enableShadow && useEffect(() => {
+    if (!shadow?.shadowRoot || cache) return
+    const emotionCache = createCache({
+      key: "chakra-shadow-root",
+      container: shadow.shadowRoot,
+    })
+    setCache(emotionCache)
+  }, [shadow, cache])
+
+  //theme related
+  const [themeConfigContent, setThemeConfigContent] = useState({})
   const [colorScheme, setColorScheme] = useState("light")
   useEffect(() => {
-    async function fetchSystem() {
-      const theme = (await browser.theme.getCurrent());
-      const themeColors = theme.colors!;
-
-      setColorScheme(theme.properties!.color_scheme!);
-
-      console.log('browser theme:',theme);
-
-      console.log('browsertheme colors:',themeColors);
-      const config = defineConfig({
-        theme: {
-            semanticTokens: {//@ts-ignore
-              colors: {
-                brand: BRAND_PALETTE,
-                ...convertTheme(themeColors)
-              }
-            },
-          }
-        });
-      
-      const newSystem = createSystem(defaultConfig, config);
-      setSystem(newSystem);
-      console.log('chakra theme config updated:',config.theme!.semanticTokens!.colors);
+    async function fetchTheme() {
+      const { themeConfigContent, colorScheme } = await get_theme_config_content(browserApi);
+      setColorScheme(colorScheme);
+      setThemeConfigContent(themeConfigContent);
     }
+
     //@ts-ignore
     if (IS_FIREFOX) {
-      fetchSystem();
-      browser.theme.onUpdated.addListener(fetchSystem);   
+      fetchTheme();
+      browserEvent.theme.onUpdated.addListener(fetchTheme);
       return () => {
-        browser.theme.onUpdated.removeListener(fetchSystem);
+        browserEvent.theme.onUpdated.removeListener(fetchTheme);
       };
     }
   }, []);
-  return (
+  const [system, setSystem] = useState(createSystem(defaultConfig))
+  // system related
+  useEffect(() => {
+    async function fetchSystem() {
+      const configContent = enableShadow ? { ...themeConfigContent, ...shadowConfigContent } : themeConfigContent;
+      const config = defineConfig(configContent);
+      const newSystem = createSystem(defaultConfig, config);
+      setSystem(newSystem);
+    }
+    fetchSystem();
+  }, [enableShadow, themeConfigContent]);
+  //
+  return enableShadow ? (
+    <root.div ref={setShadow}>
+      {shadow && cache && (
+        <EnvironmentProvider value={() => shadow.shadowRoot ?? document}>
+          <CacheProvider value={cache}>
+            <ChakraProvider value={system}>
+              <ColorModeProvider {...props} forcedTheme={colorScheme} />
+            </ChakraProvider>
+          </CacheProvider>
+        </EnvironmentProvider>
+      )}
+    </root.div>
+  ) : (
     <ChakraProvider value={system}>
       <ColorModeProvider {...props} forcedTheme={colorScheme} />
     </ChakraProvider>

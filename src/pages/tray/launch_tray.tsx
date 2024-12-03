@@ -1,6 +1,7 @@
 import { open_page_singleton } from "@/utils";
 import { OptionsSchema, get_options } from "@/pages/options/options_schema";
-import {ASSET} from "@/strings"
+import { ASSET } from "@/strings"
+
 export async function launch_tray(tab: browser.tabs.Tab) {
 	console.log("Launching tray");
 	const options = await get_options();
@@ -23,7 +24,7 @@ export async function launch_tray(tab: browser.tabs.Tab) {
 				const result = await browser.scripting.executeScript(
 					{
 						target: { tabId: tab.id! },
-						// func: renderTrayDrawer,
+						// func: launch_tray_in_page,
 						files: [ASSET.JS.TRAY_IN_PAGE],
 						injectImmediately: true,
 					}

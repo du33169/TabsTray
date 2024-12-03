@@ -1,6 +1,10 @@
 // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme#colors
 
-import { color } from "bun";
+import {
+	defineConfig
+} from "@chakra-ui/react";
+import type { SystemConfig } from "@chakra-ui/react";
+
 // commented some colors because they might be null
 const FIREFOX_COLORS = {
 	// not in doc but returned by theme
@@ -12,43 +16,43 @@ const FIREFOX_COLORS = {
 	// bookmark_text:"bookmark_text",
 	// button_background_active:"button_background_active",
 	// button_background_hover:"button_background_hover",
-	icons:"icons",
+	icons: "icons",
 	// icons_attention:"icons_attention",
-	frame:"frame",
-	frame_inactive:"frame_inactive",
-	ntp_background:"ntp_background",
-	ntp_card_background:"ntp_card_background",
-	ntp_text:"ntp_text",
-	popup:"popup",
-	popup_border:"popup_border",
-	popup_highlight:"popup_highlight",
+	frame: "frame",
+	frame_inactive: "frame_inactive",
+	ntp_background: "ntp_background",
+	ntp_card_background: "ntp_card_background",
+	ntp_text: "ntp_text",
+	popup: "popup",
+	popup_border: "popup_border",
+	popup_highlight: "popup_highlight",
 	// popup_highlight_text:"popup_highlight_text",
-	popup_text:"popup_text",
-	sidebar:"sidebar",
-	sidebar_border:"sidebar_border",
+	popup_text: "popup_text",
+	sidebar: "sidebar",
+	sidebar_border: "sidebar_border",
 	// sidebar_highlight:"sidebar_highlight",
 	// sidebar_highlight_text:"sidebar_highlight_text",
-	sidebar_text:"sidebar_text",
-	tab_background_text:"tab_background_text",
-	tab_line:"tab_line",
-	tab_loading:"tab_loading",
-	tab_selected:"tab_selected",
-	tab_text:"tab_text",
-	toolbar:"toolbar",
-	toolbar_bottom_separator:"toolbar_bottom_separator",
-	toolbar_field:"toolbar_field",
-	toolbar_field_border:"toolbar_field_border",
+	sidebar_text: "sidebar_text",
+	tab_background_text: "tab_background_text",
+	tab_line: "tab_line",
+	tab_loading: "tab_loading",
+	tab_selected: "tab_selected",
+	tab_text: "tab_text",
+	toolbar: "toolbar",
+	toolbar_bottom_separator: "toolbar_bottom_separator",
+	toolbar_field: "toolbar_field",
+	toolbar_field_border: "toolbar_field_border",
 	// toolbar_field_border_focus:"toolbar_field_border_focus",
-	toolbar_field_focus:"toolbar_field_focus",
+	toolbar_field_focus: "toolbar_field_focus",
 	// toolbar_field_highlight:"toolbar_field_highlight",
-	toolbar_field_highlight_text:"toolbar_field_highlight_text",
-	toolbar_field_text:"toolbar_field_text",
-	toolbar_field_text_focus:"toolbar_field_text_focus",
-	toolbar_text:"toolbar_text",
-	toolbar_top_separator:"toolbar_top_separator",
+	toolbar_field_highlight_text: "toolbar_field_highlight_text",
+	toolbar_field_text: "toolbar_field_text",
+	toolbar_field_text_focus: "toolbar_field_text_focus",
+	toolbar_text: "toolbar_text",
+	toolbar_top_separator: "toolbar_top_separator",
 	// toolbar_vertical_separator:"toolbar_vertical_separator",
 }
-interface TrayColors{
+interface TrayColors {
 	global_background: string,
 	container_background: string,
 	container_border: string,
@@ -83,12 +87,46 @@ const TRAY_COLORS = TRAY_COLORS_FIREFOX;
 //@ts-ignore CURRENT_BROWSER defined in build script
 const BRAND_PALETTE = BRAND_PALETTE_FIREFOX;//CURRENT_BROWSER === "firefox" ? FIREFOX_COLORS_FIREFOX : FIREFOX_COLORS_CHROME;
 
+function convertTheme(ThemeColors: browser._manifest._ThemeTypeColors) {
+	const result: Record<string, any> = {};
 
-async function get_fg_color(browserApiProvider: typeof browser=browser) {
+	for (const [key, value] of Object.entries(ThemeColors)) {
+		if (value) {
+			// Assuming value contains `_light` and `_dark` or is directly a color.
+			// Modify this logic based on your value structure.
+			const transformedValue = { _light: value, _dark: value }
+
+			result[key] = { value: transformedValue };
+		}
+	}
+	return result;
+}
+async function get_theme_config_content(browserApiProvider: typeof browser = browser): Promise<{ themeConfigContent: SystemConfig, colorScheme: string }> {
+	const theme = (await browserApiProvider.theme.getCurrent());
+	const themeColors = theme.colors!;
+
+	const colorScheme = (theme.properties!.color_scheme!);
+
+	console.log('browser theme:', theme);
+
+	console.log('browsertheme colors:', themeColors);
+	const themeConfigContent = {
+		theme: {
+			semanticTokens: {//@ts-ignore
+				colors: {
+					brand: BRAND_PALETTE,
+					...convertTheme(themeColors)
+				}
+			},
+		}
+	};
+	return { themeConfigContent, colorScheme }
+}
+async function get_fg_color(browserApiProvider: typeof browser = browser) {
 	// @ts-ignore
 	if (IS_FIREFOX) {
 		return (await browserApiProvider.theme.getCurrent()).colors!.icons!
 	}
 	else return '#000000';//window.matchMedia('(prefers-color-scheme: dark)').matches? '#ffffff' : '#000000';
 }
-export {TRAY_COLORS, BRAND_PALETTE, get_fg_color}
+export { TRAY_COLORS, BRAND_PALETTE, get_fg_color, get_theme_config_content }

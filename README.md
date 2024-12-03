@@ -32,8 +32,9 @@ Output is located at `./build` directory.
 ## Tech Stack
 
 framework: [react](https://react.dev/)
-bundler: [mako](https://makojs.dev/)
-package manager: [bun](https://bun.sh/)
+UI: [Chakra UI](https://www.chakra-ui.com/)
+package manager & bundler: [bun](https://bun.sh/)
+
 
 ## Acknowledgment
 
@@ -51,9 +52,8 @@ package manager: [bun](https://bun.sh/)
 - [x] Drag and Drop to move tabs (sortable-js)
 - [x] Pinned tab mark
 - [x] Keyboard shortcut
-- [ ] Chrome port (thumbnail cannot be supported)
+- [x] New (and default) Tray Page Mode Option: In-page, like a drawer, slide animated from the bottom
 - [ ] [Firefox only] Right click menu with browser tab operations (menus.overrideContext)
-- [ ] New (and default) Tray Page Mode Option: In-page, like a drawer, slide animated from the bottom
 - [ ] Extension Icon
 - [ ] Publish
 - [ ] Multi-Drag Mode (Selection Mode)
@@ -64,6 +64,7 @@ package manager: [bun](https://bun.sh/)
 - [ ] button icon not updated on browser window switch
 - [ ] switching to pinned tab does not update focus border (popup mode)
 - [ ] sometimes title will overflow card header
+- [ ] Drag-Drop Function conflict with other tab management extensions, for example, Tree Style Tab
 - [ ] thumbnail and card icon not updating on theme update
 - [ ] Drag-Drop not effective on chrome-based browsers
 - [ ] Dynamic Icon not supported on chrome-based browsers

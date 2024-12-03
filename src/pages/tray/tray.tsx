@@ -9,17 +9,20 @@ import Tab from "./tab"
 import TrayActionBar from "./tray_action_bar";
 import { get_options, set_options } from "../options/options_schema";
 import { TRAY_COLORS,get_fg_color } from "@/components/ui/theme";
-
+import { TrayMode,fetchTrayMode } from "./mode";
 interface SortableTabData {
     id: number;
     tab: browser.tabs.Tab;
 }
 function Tray({ browserApiProvider = browser, browserEventProvider = browser }: { browserApiProvider?: typeof browser, browserEventProvider?: typeof browser }) {
+    const [mode, setMode] = useState<TrayMode | null>(null);
     const [tabs, setTabs] = useState<browser.tabs.Tab[]>([]);
     const [showThumbnails, setShowThumbnails] = useState(false);
 
     const [sortableTabDataList, setSortableTabDataList] = useState<SortableTabData[]>([]);
     useEffect(() => {
+        //mode 
+        fetchTrayMode().then(setMode);
         // fetch tabs
         async function fetchTabs() {
             const newTabs = await browserApiProvider.tabs.query({ currentWindow: true });
@@ -32,7 +35,7 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
         async function updateIcon(tabcount: number) {
             const iconLink: HTMLLinkElement = document.querySelector("link[rel*='icon']")!;
             if (iconLink) {
-                const color = await get_fg_color();
+                const color = await get_fg_color(browserApiProvider);
                 const iconUrl = generate_icon_dataUrl(tabcount, color.toString());
                 iconLink.href = iconUrl;
                 return iconUrl;
@@ -44,7 +47,7 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
         async function onTabChanged() {
             const newTabs = await fetchTabs();
             //@ts-ignore
-            IS_FIREFOX && await updateIcon(newTabs.length);//for event listener idenfitying
+            IS_FIREFOX && mode===TrayMode.TAB && await updateIcon(newTabs.length);//for event listener idenfitying
         }
         onTabChanged();
 
@@ -103,7 +106,7 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
         return result;
     }
     return (
-        <Box minWidth={"min(700px,100vw)"} minHeight={"max(600px,100vh)"} colorPalette="brand" backgroundColor={TRAY_COLORS.global_background}>
+        <Box minWidth={"min(700px,100vw)"} minHeight={mode===TrayMode.TAB? "100vh" : (mode=== TrayMode.POPUP? "600px" : "60vh")} colorPalette="brand" backgroundColor={TRAY_COLORS.global_background}>
             {/* 800x600 is the maximal size of the popup window */}
             <Grid
                 templateColumns="repeat(auto-fill, minmax(300px, 1fr))" paddingX="max(40px,1vw)" paddingTop="max(20px,0.5vw)" asChild>
@@ -111,7 +114,7 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
                     list={sortableTabDataList}
                     setList={setSortableTabDataList}
                     animation={150}
-                    swapThreshold={0.5}
+                    // swapThreshold={0.5}
                     onEnd={move_tab}
                 >
                     {sortableTabDataList.map((tabData) => (

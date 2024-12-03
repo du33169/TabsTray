@@ -11,10 +11,7 @@ import { IconButton, Show } from "@chakra-ui/react";
 import { open_page_singleton } from "@/utils"
 import { ASSET } from "@/strings"
 import { TRAY_COLORS } from "@/components/ui/theme";
-
-const enum TrayMode {//current mode of the tray
-    TAB = "tab", POPUP = "popup", IN_PAGE = "in-page"
-}
+import { TrayMode,fetchTrayMode } from "./mode";
 
 function TrayActionBar(
     { browserApiProvider = browser, showThumbnails, setShowThumbnails }:
@@ -23,22 +20,7 @@ function TrayActionBar(
     const [mode, setMode] = useState<TrayMode>(TrayMode.TAB);
 
     useEffect(() => {
-        // fetch expandAble from current tab status
-        async function fetchTrayMode() {
-            if (window.location.href === browser.runtime.getURL(ASSET.PAGE.TRAY_TAB)) {
-                setMode(TrayMode.TAB);
-            }
-            else if (window.location.href === browser.runtime.getURL(ASSET.PAGE.TRAY_POPUP)) {
-                setMode(TrayMode.POPUP);
-            }
-            else {
-                setMode(TrayMode.IN_PAGE);
-            }
-            console.log(window.location.href, mode);
-        }
-        fetchTrayMode();
-
-
+        fetchTrayMode().then(setMode);
     }, []);
 
     const leaveAction = mode === TrayMode.POPUP ? window.close : () => { };
