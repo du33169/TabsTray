@@ -1,6 +1,32 @@
 import ReactDOMServer from 'react-dom/server';
 import { get_tabChangeEvents } from "@/utils";
 import { get_icon_color } from '@/components/ui/theme';
+import { get_options, OptionsSchema } from '@/pages/options/options_schema';
+import { isRestrictedUrl } from '@/utils';
+import { META } from '@/strings';
+async function update_action_enable() {
+    const activeTab = await browser.tabs.query({ active: true, currentWindow: true });
+    if (activeTab.length !== 1) {
+        console.warn("Require exactly one active tab, but found", activeTab.length); 
+        return;
+    }
+    const url = activeTab[0].url!;
+    const options = await get_options();
+    //only enable in drawer mode
+    if (options.launch_mode !== OptionsSchema.shape.launch_mode.enum.drawer) {
+        browser.action.enable();
+        return;
+    }
+    const isRestricted = isRestrictedUrl(url);
+    console.log("cheching url restriction", url, isRestricted)
+    if (isRestricted) {
+        browser.action.setTitle({ title: META.EXT_NAME+" disabled in this page (content scripts restricted)" ,tabId: activeTab[0].id!});
+        return browser.action.disable();
+    } else {
+        return browser.action.enable();
+    }
+}
+
 export async function updateIcon() {
     try {
         // Get all tabs in the current window
@@ -8,8 +34,8 @@ export async function updateIcon() {
         const tabCount = tabs.length;
 
         const color = await get_icon_color();
-
         // Update the browser action icon with the SVG
+        update_action_enable();
         return browser.action.setIcon({ path: generate_icon_dataUrl(tabCount, color.toString()) });
 
     } catch (error) {
@@ -56,8 +82,9 @@ function TabIcon({ n, color }: { n: number, color: string }) {
 export function update_icon_on_theme_install() {
     // Update icon on tab change
     get_tabChangeEvents().forEach(event => { event.addListener(updateIcon) });
+
     //@ts-ignore
-    IS_FIREFOX &&browser.theme.onUpdated.addListener(updateIcon);
+    IS_FIREFOX && browser.theme.onUpdated.addListener(updateIcon);
     updateIcon();
 }
 

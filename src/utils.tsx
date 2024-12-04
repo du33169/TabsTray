@@ -1,5 +1,5 @@
 export function get_tabChangeEvents(browserEventProvider = browser) {
-	return [browserEventProvider.tabs.onUpdated, browserEventProvider.tabs.onRemoved, browserEventProvider.tabs.onMoved, browserEventProvider.tabs.onCreated]
+	return [browserEventProvider.tabs.onActivated, browserEventProvider.tabs.onUpdated, browserEventProvider.tabs.onRemoved, browserEventProvider.tabs.onMoved, browserEventProvider.tabs.onCreated]
 }
 
 export async function open_page_singleton(
@@ -32,4 +32,32 @@ export async function open_page_singleton(
 			console.error("Error querying tabs:", error);
 			return Promise.reject(error);
 		});
+}
+
+const RESTRICED_URL_PATTERNS_FIREFOX: (string|RegExp)[] = [
+    "accounts-static.cdn.mozilla.net",
+    "accounts.firefox.com",
+    "addons.cdn.mozilla.net",
+    "addons.mozilla.org",
+    "api.accounts.firefox.com",
+    "content.cdn.mozilla.net",
+    "discovery.addons.mozilla.org",
+    "install.mozilla.org",
+    "oauth.accounts.firefox.com",
+    "profile.accounts.firefox.com",
+    "support.mozilla.org",
+	"sync.services.mozilla.com",
+	/about:.*/
+]
+
+export function isRestrictedUrl(url: string): boolean {
+	if (!url) return true;
+	return RESTRICED_URL_PATTERNS_FIREFOX.some(pattern => {
+		if (typeof pattern === "string") {
+			return new URL(url).hostname.includes(pattern);
+		} else {
+			return pattern.test(url);
+		}
+	});
+
 }
