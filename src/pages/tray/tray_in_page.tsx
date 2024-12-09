@@ -13,7 +13,7 @@ import {
 	DrawerCloseTrigger,
 } from "@/components/ui/drawer"
 import { Center } from "@chakra-ui/react";
-import { browserApi, browserEvent, client_install } from "@/browserProxy/client";
+import { browserApi, browserEvent, client_install, client_uninstall } from "@/browserProxy/client";
 import { Tray } from "./tray";
 import { META } from "@/strings"
 import { TRAY_COLORS } from "@/components/ui/theme";
@@ -30,8 +30,8 @@ function TrayDrawer({ onClose }: { onClose: () => void }) {
 			onExitComplete={onClose}
 			unmountOnExit={true}
 			closeOnInteractOutside={false}//NOTE: setting to true will cause immediate close if click anything even inside the drawer (on focus outside, only in IIFE)
-			onFocusOutside={(e) => { console.log("focus outside", e); }}
-			onInteractOutside={(e) => { console.log("interact outside", e); }}
+			// onFocusOutside={(e) => { console.log("focus outside", e); }}
+			// onInteractOutside={(e) => { console.log("interact outside", e); }}
 			onPointerDownOutside={(e) => { console.log("pointer down outside", e); setIsOpen(false)}}
 		>
 			<DrawerBackdrop />
@@ -64,7 +64,7 @@ function App({ onClose }: { onClose: () => void }) {
 
 function launch_tray_in_page() {
 	console.log("launch Tray in Drawer");
-	const port=client_install("tray-in-drawer");
+	client_install();
 	function getRootContainerElement() {
 		const container = document.createElement("div");
 		container.id = "tray-container";
@@ -74,7 +74,7 @@ function launch_tray_in_page() {
 	const rootElement = getRootContainerElement();
 	const root = ReactDOM.createRoot(rootElement);
 	function onClose() {
-		port.disconnect();
+		client_uninstall();
 		const containerNow = document.getElementById("tray-container");
 		console.log("onClose");
 		containerNow!.remove();

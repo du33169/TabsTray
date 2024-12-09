@@ -1,12 +1,20 @@
 
 //server side
 import { ACTION } from './defines'
-
+function get_api(api: string, item: string) {
+	if (browser.hasOwnProperty(api) && browser[api].hasOwnProperty(item)) {
+		return browser[api][item];
+	} else {
+		console.error(`API ${api} or item ${item} not found`);
+		return null;
+	}
+}
 async function handle_api(api: string, method: string, args: any[]) {
-	console.log(`Calling browser API ${api}.${method} with args: `,args);
-	if (browser[api] && typeof browser[api][method] === 'function') {
+	console.log(`Calling browser API ${api}.${method} with args: `, args);
+	const handle=get_api(api,method);
+	if (handle) {
 		try {
-			const result = await browser[api][method](...args);
+			const result = await handle(...args);
 			return Promise.resolve(result); // Send back the result
 		} catch (error:any) {
 			return Promise.reject(error.message);
@@ -16,59 +24,129 @@ async function handle_api(api: string, method: string, args: any[]) {
 	}
 }
 
-async function handle_event(port:browser.runtime.Port, api: string, event: string, action: string) {
-	console.log(`Registering browser event ${api}.${event}`);
-	if (browser[api] && browser[api][event]) {
-		const listener = (...args) => {
-			port.postMessage({
-				action: ACTION.BROWSER_EVENT_ADD,
-				api,
-				event,
-				args,
+class PersistentListenerManager {
+	// data structure: a object with tabId as key and an array as value, storing all events registered for that tab
+	// each element in the array is an object with api and event as keys
+	private tabEvents: { [tabId: number]: { api: string, event: string }[] } = {};
+	private loaded = false;
+	listener_factory(api: string, event: string) {
+		return async (...args: any[]) => {
+			console.log(`Received browser event ${api}.${event} with args: `, args);
+			if(!this.loaded) await this.load();
+			Object.entries(this.tabEvents).forEach(([tabId, eventList]) => {
+				if (eventList.some(item => item.api === api && item.event === event)) {
+					console.log(`Sending browser event ${api}.${event} to tab ${tabId}`);
+					browser.tabs.sendMessage(Number(tabId), {
+						action: ACTION.BROWSER_EVENT_CALLBACK,
+						api,
+						event,
+						args,
+					});
+				}
 			});
 		}
-		if (action === ACTION.BROWSER_EVENT_ADD) {
-			browser[api][event].addListener(listener);
-		} else if (action === ACTION.BROWSER_EVENT_REMOVE) {
-			browser[api][event].removeListener(listener);
-		} else {
-			console.error(`Unknown action ${action}`);
+	}
+	constructor(eventList:{ api: string, event: string }[]) {
+		eventList.forEach(item => {// in manifest 3, only sync eventListeners can persist across non-persistent background pages
+			const listener = this.listener_factory(item.api, item.event);
+			get_api(item.api, item.event).addListener(listener);
+		});
+		if(!this.loaded)this.load();
+	}
+	save() {
+		//save eventList to storage 
+		browser.storage.local.set({ tabEvents: this.tabEvents }).then(() => {
+			console.log(`Saved tabEvents to storage local: `, this.tabEvents);
+		});
+		
+	}
+	async load() {
+		//load eventList from storage 
+		return browser.storage.local.get('tabEvents').then(result => {
+			if (result.tabEvents) {
+				this.tabEvents = result.tabEvents;
+			}
+		}).then(() => {
+			console.log(`LoadedtabEvents from storage local: `, this.tabEvents);
+			this.loaded = true;
+		});
+		
+	}
+
+	register(tabId : number,api: string, event: string) {
+		//check if event already exists
+		if (!this.tabEvents.hasOwnProperty(tabId)) {
+			this.tabEvents[tabId] = [];			
 		}
-	} else {
-		console.error(`Event ${event} not found`);
+		const eventList = this.tabEvents[tabId];
+		const index = eventList.findIndex(item => item.api === api && item.event === event);
+		if (index !== -1) {
+			console.log(`Event ${api}.${event} already registered for tab ${tabId}`);
+			return;
+		} else { //event not exists, register it
+			eventList.push({ api, event });
+		}
+		this.save();
+	}
+	unregister(tabId: number, api: string, event: string) {
+		if (!this.tabEvents.hasOwnProperty(tabId)) {
+			console.error(`No event registered for tab ${tabId}`);
+			return;
+		}
+		const eventList = this.tabEvents[tabId];
+		const index = eventList.findIndex(item => item.api === api && item.event === event);
+		if (index === -1) {
+			console.error(`Event ${api}.${event} not registered for tab ${tabId}`);
+			return;
+		} else { //event exists, unregister it
+			eventList.splice(index, 1);
+		}
+		this.save();
+	}
+	unregister_tab(tabId: number) {
+		if (!this.tabEvents.hasOwnProperty(tabId)) {
+			console.error(`No event registered for tab ${tabId}`);
+			return;
+		}
+		delete this.tabEvents[tabId];
+		this.save();
 	}
 }
-function handle_message_factory(port: browser.runtime.Port) {
-	return async function handle_message(message: any) {
+
+
+async function handle_event(listenerMgr: PersistentListenerManager, tabId: number, api: string, event: string, action: string) {
+	
+	if (action === ACTION.BROWSER_EVENT_ADD) {
+		console.log(`Registering browser event ${api}.${event} from tab ${tabId}`);
+		listenerMgr.register(tabId, api, event);
+	} else if (action === ACTION.BROWSER_EVENT_REMOVE) {
+		console.log(`Unregistering browser event ${api}.${event} from tab ${tabId}`);
+		listenerMgr.unregister(tabId, api, event);
+	} else {
+		console.error(`Unknown action ${action}`);
+	}
+}
+function handle_message_factory(listenerMgr: PersistentListenerManager) {
+	return async function handle_message(message: any, sender: browser.runtime.MessageSender, sendResponse: (response: any) => void): Promise<any> {
 		const { action, ...rest } = message;
-		console.log(`Received message from content script: `,message);
+		console.log(`Received message from content script: `, message);
 		if (action === ACTION.BROWSER_API) {
 			const { api, method, args } = rest;
 			return handle_api(api, method, args);
 		} else if (action === ACTION.BROWSER_EVENT_ADD || action === ACTION.BROWSER_EVENT_REMOVE) {
 			const { api, event } = rest;
-			return handle_event(port,api, event, action);
+			return handle_event(listenerMgr,sender.tab!.id!, api, event, action);
+		} else if (action === ACTION.BROWSER_EVENT_CLEAR) {
+			listenerMgr.unregister_tab(sender.tab!.id!);
 		} else {
 			console.error(`Unknown action ${action}`);
 		}
 	}
 }
 
-function handle_connect(port:browser.runtime.Port) {
-	console.log(`Connected to content script on port ${port.name}`);
-	const message_handler = handle_message_factory(port);
-	port.onMessage.addListener(message_handler);
-	browser.runtime.onMessage.addListener(message_handler);
-	port.onDisconnect.addListener(() => {
-		console.log(`Disconnected from content script on port ${port.name}`);
-		browser.runtime.onMessage.removeListener(message_handler);
-	});
-
-}
-
-
-function server_install() {
-	browser.runtime.onConnect.addListener(handle_connect);
+function server_install(eventList: { api: string, event: string }[]) {
+	const listenerMgr = new PersistentListenerManager(eventList);
+	browser.runtime.onMessage.addListener(handle_message_factory(listenerMgr));
 }
 
 export { server_install };

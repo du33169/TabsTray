@@ -1,6 +1,6 @@
 //client side
 import { ACTION } from './defines'
-var port:browser.runtime.Port;
+
 const browserApi = new Proxy(
 	{},
 	{
@@ -10,7 +10,7 @@ const browserApi = new Proxy(
 				{
 					get(_, method) {
 						return (...args: any) => {
-							console.log('browser api call:', api, method, args, 'on port:', port);
+							console.log('browser api call:', api, method, args);
 							return browser.runtime.sendMessage({ //because require promise return
 								action: ACTION.BROWSER_API,
 								api: api,
@@ -39,13 +39,13 @@ const browserEvent = new Proxy(
 							{},
 							{
 								get(_, method) {
-									console.log('browser event call:', api, event, method, 'on port:', port);
+									console.log('browser event call:', api, event, method);
 									if (method === 'addListener') {
 										return (callback: () => void) => {
 											const callbackList = eventListeners.get(JSON.stringify([api, event]));
 											if (!callbackList) {
 												eventListeners.set(JSON.stringify([api, event]), [callback]);
-												port.postMessage({
+												browser.runtime.sendMessage({
 													action: ACTION.BROWSER_EVENT_ADD,
 													api: api,
 													event: event,
@@ -64,7 +64,7 @@ const browserEvent = new Proxy(
 												if (index >= 0) {
 													callbackList.splice(index, 1);
 												} else {// all clear
-													port.postMessage({
+													browser.runtime.sendMessage({
 														action: ACTION.BROWSER_EVENT_REMOVE,
 														api: api,
 														event: event,
@@ -91,7 +91,7 @@ const browserEvent = new Proxy(
 
 function handleMessage(message: any) {
 	const { action, ...rest } = message;
-	if (action === ACTION.BROWSER_EVENT_ADD) {
+	if (action === ACTION.BROWSER_EVENT_CALLBACK) {
 		const { api, event, args } = rest;
 		console.log('browser event callback:', api, event, args)
 		const callbackList = eventListeners.get(JSON.stringify([api, event]));
@@ -107,23 +107,13 @@ function handleMessage(message: any) {
 
 }
 
-function client_install(portName: string) {
-	port = browser.runtime.connect({ name: portName });
-	port.onMessage.addListener(handleMessage);
-	console.log('connected to port:', port);
-	port.onDisconnect.addListener(() => {
-		eventListeners.forEach((callbackList, tuple) => {
-			const [api, event] = JSON.parse(tuple);
-			port.postMessage({
-				action: ACTION.BROWSER_EVENT_REMOVE,
-				api,
-				event,
-			});
-		});
-		eventListeners.clear();
-		console.log('disconnected from port:', port);
-	});
-	return port;
+function client_install() {
+	browser.runtime.onMessage.addListener(handleMessage);
 }
-
-export { browserApi , browserEvent, client_install };
+function client_uninstall() {
+	browser.runtime.sendMessage({
+		action: ACTION.BROWSER_EVENT_CLEAR,
+	});
+	browser.runtime.onMessage.removeListener(handleMessage);
+}
+export { browserApi , browserEvent, client_install,client_uninstall };

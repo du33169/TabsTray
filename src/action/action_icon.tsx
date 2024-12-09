@@ -18,7 +18,7 @@ async function update_action_enable() {
         return;
     }
     const isRestricted = isRestrictedUrl(url);
-    console.log("cheching url restriction", url, isRestricted)
+    console.log("checking url restriction", url, isRestricted)
     if (isRestricted) {
         browser.action.setTitle({ title: META.EXT_NAME+" disabled in this page (content scripts restricted)" ,tabId: activeTab[0].id!});
         return browser.action.disable();

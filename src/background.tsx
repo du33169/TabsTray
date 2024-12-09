@@ -23,4 +23,11 @@ browser.action.onClicked.addListener(() => console.log("action clicked"))
 update_icon_on_theme_install();
 
 
-server_install();
+server_install([
+	{ api: 'tabs', event: 'onUpdated' },
+	{ api: 'tabs', event: 'onActivated' },
+	{ api: 'tabs', event: 'onRemoved' },
+	{ api: 'tabs', event: 'onMoved' },
+	{ api: 'tabs', event: 'onCreated' },
+	{ api: 'theme', event: 'onUpdated' }
+]);
