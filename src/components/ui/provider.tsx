@@ -61,6 +61,7 @@ export function Provider(props: ProviderProps) {
   useEffect(() => {
     async function fetchTheme() {
       const { themeConfigContent, colorScheme } = await get_theme_config_content(browserApi);
+      console.log("colorScheme", colorScheme)
       setColorScheme(colorScheme);
       setThemeConfigContent(themeConfigContent);
     }
@@ -92,7 +93,7 @@ export function Provider(props: ProviderProps) {
         <EnvironmentProvider value={() => shadow.shadowRoot ?? document}>
           <CacheProvider value={cache}>
             <ChakraProvider value={system}>
-              <ColorModeProvider {...props} forcedTheme={colorScheme} />
+              <ColorModeProvider {...props} forcedTheme={colorScheme} enableColorScheme={false}/>
             </ChakraProvider>
           </CacheProvider>
         </EnvironmentProvider>
@@ -100,7 +101,7 @@ export function Provider(props: ProviderProps) {
     </root.div>
   ) : (
     <ChakraProvider value={system}>
-      <ColorModeProvider {...props} forcedTheme={colorScheme} />
+      <ColorModeProvider {...props} forcedTheme={colorScheme}  />
     </ChakraProvider>
   )
 }

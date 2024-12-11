@@ -65,7 +65,7 @@ package manager & bundler: [bun](https://bun.sh/)
 - [ ] switching to pinned tab does not update focus border (popup mode)
 - [ ] sometimes title will overflow card header
 - [ ] Drag-Drop Function conflict with other tab management extensions, for example, Tree Style Tab
-- [ ] thumbnail and card icon not updating on theme update
-- [ ] In-page mode will add color-scheme style to the global html element (develop.mozilla.org)
+- [ ] thumbnail and card icon color not updating on theme update
+- [ ] In-page mode button hover background not following color-scheme
 - [ ] Drag-Drop not effective on chrome-based browsers
 - [ ] Dynamic Icon not supported on chrome-based browsers
