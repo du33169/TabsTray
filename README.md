@@ -51,7 +51,6 @@ package manager & bundler: [bun](https://bun.sh/)
 ## Know Bugs
 
 - [ ] switching to pinned tab does not update focus border (popup mode)
-- [ ] sometimes title will overflow card header
 - [ ] Drag-Drop Function conflict with other tab management extensions, for example, Tree Style Tab
 - [ ] thumbnail and card icon color not updating on theme update
 - [ ] Drag-Drop not effective on chrome-based browsers

@@ -50,7 +50,7 @@ function Tab({ browserApiProvider = browser, tab, showThumbnails }: { browserApi
                                 }
                             </Icon>
                             <Center asChild>
-                                <Text truncate textStyle="sm" lineClamp={showThumbnails ? 1 : 3} color={TRAY_COLORS.global_foreground}>
+                                <Text truncate textStyle="sm" lineClamp={showThumbnails ? 1 : 3} color={TRAY_COLORS.global_foreground} wordBreak={"break-all"}>
                                     {tab.title}
                                 </Text>
                             </Center>
