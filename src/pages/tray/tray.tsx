@@ -30,8 +30,8 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
             return newTabs;
         }
 
-        async function updateIcon(tabcount: number) {
-            const iconLink: HTMLLinkElement = document.querySelector("link[rel*='icon']")!;
+        async function updateTrayTabIcon(tabcount: number) {
+            const iconLink: HTMLLinkElement = documentRoot.querySelector("link[rel*='icon']")!;
             if (iconLink) {
                 const color = await get_icon_color(browserApiProvider);
                 const iconUrl = generate_icon_dataUrl(tabcount, color.toString());
@@ -45,7 +45,7 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
         async function onTabChanged() {
             const newTabs = await fetchTabs();
             //@ts-ignore
-            IS_FIREFOX && mode===TrayMode.TAB && await updateIcon(newTabs.length);//for event listener idenfitying
+            IS_FIREFOX && mode===TrayMode.TAB && await updateTrayTabIcon(newTabs.length);//for event listener idenfitying
         }
         onTabChanged();
 

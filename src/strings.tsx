@@ -1,5 +1,9 @@
 const META = {
-	EXT_NAME: "Tabs Tray",
+	EXT_NAME: "Tabs Tray" as string,
+
+}
+const KEY = {
+	IN_PAGE_CONTAINER_ID: (META.EXT_NAME.replaceAll(" ", "_") + "_in_page_container") as string,
 }
 const ASSET = {
 	PAGE: {
@@ -14,4 +18,4 @@ const ASSET = {
 	}
 }
 
-export { META, ASSET }
+export { META, KEY, ASSET }

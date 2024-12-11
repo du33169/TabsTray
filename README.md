@@ -45,13 +45,12 @@ package manager & bundler: [bun](https://bun.sh/)
 - [ ] [Firefox only] Right click menu with browser tab operations (menus.overrideContext)
 - [ ] Extension Icon
 - [ ] Publish
+- [ ] Customize Action bar position
 - [ ] Multi-Drag Mode (Selection Mode)
 - [ ] Filter bar (title and url)
 
 ## Know Bugs
 
-- [ ] switching to pinned tab does not update focus border (popup mode)
 - [ ] Drag-Drop Function conflict with other tab management extensions, for example, Tree Style Tab
-- [ ] thumbnail and card icon color not updating on theme update
-- [ ] Drag-Drop not effective on chrome-based browsers
-- [ ] Dynamic Icon not supported on chrome-based browsers
+- [ ] tab icon color not updating on theme update (In-page popup)
+- [ ] In-Page mode will add "dark"/"light" class  to the global html element
