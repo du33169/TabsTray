@@ -48,7 +48,7 @@ function TrayDrawer({ onClose }: { onClose: () => void }) {
 					{ /*@ts-ignore */}
 					<Tray browserApiProvider={browserApi} browserEventProvider={browserEvent} />
 				</DrawerBody>
-				<DrawerCloseTrigger />
+				<DrawerCloseTrigger rounded={"xl"}/>
 			</DrawerContent>
 		</DrawerRoot>
 	)
