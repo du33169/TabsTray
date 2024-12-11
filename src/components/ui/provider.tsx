@@ -25,7 +25,8 @@ const varRoot = ":host"
 const shadowConfigContent: SystemConfig = {
   cssVarsRoot: varRoot,
   conditions: {
-    light: `${varRoot} &, .light &`,
+    light: `${varRoot} &, ${varRoot}(.light) &`,
+    dark: `${varRoot}(.dark) &`,
   },
   preflight: { scope: varRoot },
   globalCss: {
@@ -88,7 +89,7 @@ export function Provider(props: ProviderProps) {
   }, [enableShadow, themeConfigContent,colorScheme]);
   //
   return enableShadow ? (
-    <root.div ref={setShadow}>
+    <root.div ref={setShadow} className={colorScheme}>
       {shadow && cache && (
         <EnvironmentProvider value={() => shadow.shadowRoot ?? document}>
           <CacheProvider value={cache}>
