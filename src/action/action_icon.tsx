@@ -81,8 +81,10 @@ function TabIcon({ n, color }: { n: number, color: string }) {
 
 export function update_icon_on_theme_install() {
     // Update icon on tab change
-    get_tabChangeEvents().forEach(event => { event.addListener(updateIcon) });
-
+    get_tabChangeEvents().forEach(event => { event.addListener(updateIcon) });  
+    browser.windows.onFocusChanged.addListener((windowId: number) => {
+        windowId !== browser.windows.WINDOW_ID_NONE && updateIcon();
+    })
     //@ts-ignore
     IS_FIREFOX && browser.theme.onUpdated.addListener(updateIcon);
     updateIcon();

@@ -18,7 +18,7 @@ working in progress...
 To install dependencies:
 
 ```bash
-bun install
+bun install .
 ```
 
 To build:
@@ -42,17 +42,6 @@ package manager & bundler: [bun](https://bun.sh/)
 
 ## Todo
 
-- [x] Card size: use device screen size
-- [x] New Tab floating button
-- [x] Option page -> Tray Page Mode Option ( tab, popup)
-- [x] Expand Button for popup to switch to a single tab (auto hide on tab mode)
-- [x] a switch to expand-fold thumbnail
-- [x] primary color bordered active tab
-- [x] Browser native style
-- [x] Drag and Drop to move tabs (sortable-js)
-- [x] Pinned tab mark
-- [x] Keyboard shortcut
-- [x] New (and default) Tray Page Mode Option: In-page, like a drawer, slide animated from the bottom
 - [ ] [Firefox only] Right click menu with browser tab operations (menus.overrideContext)
 - [ ] Extension Icon
 - [ ] Publish
@@ -61,7 +50,6 @@ package manager & bundler: [bun](https://bun.sh/)
 
 ## Know Bugs
 
-- [ ] button icon not updated on browser window switch
 - [ ] switching to pinned tab does not update focus border (popup mode)
 - [ ] sometimes title will overflow card header
 - [ ] Drag-Drop Function conflict with other tab management extensions, for example, Tree Style Tab
