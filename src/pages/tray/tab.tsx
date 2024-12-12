@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { MdLanguage } from "react-icons/md";
 // import { Button } from "../components/ui/button";
 import { CloseButton } from "@/components/ui/close-button";
-import { Card, Image, AspectRatio, Text, HStack, Container, Icon, Center, Show, Box } from "@chakra-ui/react";
+import { Card, Image, AspectRatio, Text, HStack, Container, Icon, Center, Collapsible, Show } from "@chakra-ui/react";
 
 import { TRAY_COLOR_TOKENS } from "@/theme/tray_color";
 
@@ -59,17 +59,21 @@ function Tab({ browserApiProvider = browser, tab, showThumbnails }: { browserApi
                     </Container>
                 </Card.Header>
                 <Card.Body padding={0} >
-                    <Show when={showThumbnails}>
-                        <AspectRatio ratio={Math.max(screen.availWidth / screen.availHeight, 4 / 3)}>
-                            {
-                                thumbnailUri ?
-                                    <Image src={thumbnailUri} alt="Thumbnail" /> :
-                                    <Center color={`${TRAY_COLOR_TOKENS.global_foreground}/40`}>
-                                        <MdLanguage size={"30%"}  title="Thumbnail Unavailable" />
-                                    </Center>
-                            }
-                        </AspectRatio>
-                    </Show>
+                    {/* <Show when={showThumbnails}> */}
+                    <Collapsible.Root open={showThumbnails} lazyMount={true} defaultOpen={true}>
+                        <Collapsible.Content>
+                            <AspectRatio ratio={Math.max(screen.availWidth / screen.availHeight, 4 / 3)}>
+                                {
+                                    thumbnailUri ?
+                                        <Image src={thumbnailUri} alt="Thumbnail" /> :
+                                        <Center color={`${TRAY_COLOR_TOKENS.global_foreground}/40`}>
+                                            <MdLanguage size={"30%"} title="Thumbnail Unavailable" />
+                                        </Center>
+                                }
+                            </AspectRatio>
+                        </Collapsible.Content>
+                    </Collapsible.Root>
+                        {/* </Show> */}
                 </Card.Body>
 
                 {/* <Card.Footer /> */}
