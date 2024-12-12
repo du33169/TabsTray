@@ -71,4 +71,5 @@ Three modes are available:
 
 - [ ] Drag-Drop Function conflict with other tab management extensions, for example, Tree Style Tab
 - [ ] tab icon color not updated on theme update (In-page drawer)
+- [ ] thumbnail expand flash on drag-drop (redundant update on tab update callback)
 - [ ] Popup not expanding under some situation
