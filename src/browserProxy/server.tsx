@@ -1,12 +1,12 @@
 
 //server side
 import { ACTION } from './defines'
-function get_api(api: string, item: string) {
-	if (browser.hasOwnProperty(api) && browser[api].hasOwnProperty(item)) {
-		return browser[api][item];
+function get_api(api: string, item: string):any {
+	if (browser.hasOwnProperty(api) && browser[api as keyof typeof browser].hasOwnProperty(item)) {
+		const apiObj=browser[api as keyof typeof browser];
+		return apiObj[item as keyof typeof apiObj];
 	} else {
 		console.error(`API ${api} or item ${item} not found`);
-		return null;
 	}
 }
 async function handle_api(api: string, method: string, args: any[]) {
@@ -55,19 +55,19 @@ class PersistentListenerManager {
 	}
 	save() {
 		//save eventList to storage 
-		browser.storage.local.set({ tabEvents: this.tabEvents }).then(() => {
-			console.log(`Saved tabEvents to storage local: `, this.tabEvents);
+		browser.storage.session.set({ tabEvents: this.tabEvents }).then(() => {
+			console.log(`Saved tabEvents to storage session: `, this.tabEvents);
 		});
 		
 	}
 	async load() {
 		//load eventList from storage 
-		return browser.storage.local.get('tabEvents').then(result => {
+		return browser.storage.session.get('tabEvents').then(result => {
 			if (result.tabEvents) {
 				this.tabEvents = result.tabEvents;
 			}
 		}).then(() => {
-			console.log(`LoadedtabEvents from storage local: `, this.tabEvents);
+			console.log(`LoadedtabEvents from storage session: `, this.tabEvents);
 			this.loaded = true;
 		});
 		
