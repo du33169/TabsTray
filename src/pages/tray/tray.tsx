@@ -71,9 +71,9 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
     //update options when show_thumbnails changed
     async function manual_set_show_thumbnails(newShowThumbnails: boolean) {
         setShowThumbnails(newShowThumbnails);
-        const options = await get_options();
-        options.show_thumbnails = newShowThumbnails;
-        await set_options(options);
+        // const options = await get_options();
+        // options.show_thumbnails = newShowThumbnails;
+        // await set_options(options);
     }
 
     async function move_tab(event: Sortable.SortableEvent) {
@@ -89,7 +89,7 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
                 //still in pinned group, do nothing
             }
         } else {//originally unpinned
-            if (sortableTabDataList[event.newIndex!].tab.pinned ) {
+            if (sortableTabDataList[event.newIndex!].tab.pinned) {
                 //move to pinned group
                 await browserApiProvider.tabs.update(tabData.id, { pinned: true });
                 console.log(`Tab ${tabData.id} moved to pinned group`);
@@ -98,11 +98,11 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
             }
         }
         const result = await browserApiProvider.tabs.move(tabData.id, { index: event.newIndex! });
-        console.log('tab move result:',result);
+        console.log('tab move result:', result);
         return result;
     }
     return (
-        <Box minWidth={"min(700px,100vw)"} minHeight={mode===TrayMode.TAB? "100vh" : (mode=== TrayMode.POPUP? "600px" : "60vh")} colorPalette="brand" backgroundColor={TRAY_COLORS.global_background}>
+        <Box minWidth={"min(700px,100vw)"} minHeight={mode === TrayMode.TAB ? "100vh" : (mode === TrayMode.POPUP ? "600px" : "60vh")} colorPalette="brand" backgroundColor={TRAY_COLORS.global_background}>
             {/* 800x600 is the maximal size of the popup window */}
             <Grid
                 templateColumns="repeat(auto-fill, minmax(300px, 1fr))" paddingX="max(40px,1vw)" paddingTop="max(20px,0.5vw)" asChild>
@@ -121,7 +121,7 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
                                 }}
                                 transition="transform 0.2s ease"
                             >
-                                <Tab tab={tabData.tab} browserApiProvider={browserApiProvider} showThumbnails={showThumbnails===true} />
+                                <Tab tab={tabData.tab} browserApiProvider={browserApiProvider} showThumbnails={showThumbnails === true} />
                                 <Show when={tabData.tab.pinned}>
                                     <Float placement="top-start" transform="rotate(-45deg)" translate="+10% +10%">
                                         <MdPushPin size={"20px"} />

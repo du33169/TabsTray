@@ -26,7 +26,7 @@ const optionText2Label: Record<string, string> = {
 	"popup": "Extension Button Popup",
 	"drawer": "In-Page Drawer",
 	"pin_tray_tab": "Pin Tabs Tray (Tab Mode Only)",
-	"show_thumbnails": "Show Tab Thumbnails",
+	"show_thumbnails": "Show Tab Thumbnails By Default",
 };
 const optionsStorage = new OptionsSync({ defaults: defaultValues });
 
