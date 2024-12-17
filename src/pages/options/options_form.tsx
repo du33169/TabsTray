@@ -1,18 +1,22 @@
 import { useEffect, useState } from 'react';
-import { Schema, set, z } from 'zod';
+import { z } from 'zod';
 import {
 	Button,
 	Fieldset,
 	Stack,
 	HStack,
-	Box
-} from '@chakra-ui/react';
-import { Radio, RadioGroup } from "@/components/ui/radio"
+	Box} from '@chakra-ui/react';
+import { toaster,Toaster } from '@/components/ui/toaster';
+import {
+	RadioCardItem,
+	RadioCardLabel,
+	RadioCardRoot,
+  } from "@/components/ui/radio-card"
 import { Switch } from '@/components/ui/switch';
 import { Field } from '@/components/ui/field';
 import type { Options } from './options_schema';
 import { defaultValues, OptionsSchema, optionText2Label, set_options, get_options } from './options_schema';
-
+import {META} from "@/strings"
 // Utility function to render fields based on Zod schema
 const renderField = (
 	key: string,
@@ -24,15 +28,13 @@ const renderField = (
 		// Enum type => Use SegmentedControl
 		const schemaOptions = schemaType.options;
 		return (
-			<RadioGroup value={value} onValueChange={(e) => { setValue(key, e.value); }}>
-				<HStack gap="6">
+			<RadioCardRoot value={value} onValueChange={(e) => { setValue(key, e.value); }}>
+				<HStack align="stretch">
 					{schemaOptions.map((option: string) => (
-						<Box key={option}>
-							<Radio value={option}>{optionText2Label[option]}</Radio>
-						</Box>
+						<RadioCardItem key={option} value={option} label={optionText2Label[option]} indicatorPlacement='start'/>
 					))}
 				</HStack>
-			</RadioGroup>
+			</RadioCardRoot>
 		);
 	}
 	else if (schemaType instanceof z.ZodBoolean) {
@@ -71,17 +73,20 @@ function OptionsForm() {
 		const parsed = OptionsSchema.safeParse(formValues);
 		if (parsed.success) {
 			set_options(parsed.data);
-			console.log('Saved Options:', formValues);
-			alert('Settings saved successfully!');
+			console.log('Saving Options:', formValues);
+			toaster.success({
+				description: 'Settings saved successfully!'
+			});
 		} else {
-			alert('Validation failed: ' + parsed.error.message);
+			toaster.error({ description: 'Validation failed: ' + parsed.error.message });
 		}
 	};
 
 	return (
-		<Fieldset.Root size="lg" maxW="md">
+		<>
+		<Fieldset.Root width="100%" size={"lg"}>
 			<Stack>
-				<Fieldset.Legend>TabsTray Options</Fieldset.Legend>
+				{/* <Fieldset.Legend>{META.EXT_NAME} Options</Fieldset.Legend> */}
 				<Fieldset.HelperText>
 					These options will be synced using the browser's storage API.
 				</Fieldset.HelperText>
@@ -90,7 +95,8 @@ function OptionsForm() {
 			<Fieldset.Content>
 				{Object.entries(OptionsSchema.shape).map(([key, schemaType]) =>
 					<Box key={key}>
-						<Field label={optionText2Label[key]}>
+						
+						<Field label={optionText2Label[key]} helperText={schemaType.description} > {/*orientation={schemaType instanceof z.ZodBoolean ? 'horizontal' : 'vertical'}*/}
 							{renderField(
 								key,
 								schemaType,
@@ -104,8 +110,9 @@ function OptionsForm() {
 			<Button onClick={handleSave}>
 				Save
 			</Button>
-		</Fieldset.Root>
-
+			</Fieldset.Root>
+			<Toaster/>
+		</>
 	);
 };
 

@@ -1,7 +1,9 @@
 // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme#colors
 
 import {
-	defineConfig
+	defineConfig,
+	defineRecipe,
+	FieldLabel
 } from "@chakra-ui/react";
 import type { SystemConfig } from "@chakra-ui/react";
 

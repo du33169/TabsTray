@@ -4,9 +4,9 @@ import OptionsSync from 'webext-options-sync';
 // Define the Zod Schema
 
 const OptionsSchema = z.object({
-	launch_mode: z.enum(['tab', 'popup', 'drawer']),
-	pin_tray_tab: z.boolean(),
-	show_thumbnails: z.boolean(),
+	launch_mode: z.enum(['tab', 'popup', 'drawer']).describe("How to launch Tabs Tray when clicking the extension button. "),
+	pin_tray_tab: z.boolean().describe("Whether to automatically pin the Tabs Tray tab after launched (Effective only in Tab Mode)."),
+	show_thumbnails: z.boolean().describe("Whether to display tab thumbnails by default."),
 });
 
 // Create TypeScript type from schema
@@ -24,9 +24,9 @@ const optionText2Label: Record<string, string> = {
 	"launch_mode": "Launch Mode",
 	"tab": "Standalone Tab",
 	"popup": "Extension Button Popup",
-	"drawer": "In-Page Drawer",
+	"drawer": "In-Page Drawer (Experimental)",
 	"pin_tray_tab": "Pin Tabs Tray (Tab Mode Only)",
-	"show_thumbnails": "Show Tab Thumbnails By Default",
+	"show_thumbnails": "Show Tab Thumbnails",
 };
 const optionsStorage = new OptionsSync({ defaults: defaultValues });
 

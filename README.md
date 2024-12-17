@@ -45,11 +45,12 @@ package manager & bundler: [bun](https://bun.sh/)
 - [ ] [Firefox only] Right click menu with browser tab operations (menus.overrideContext)
 - [ ] Extension Icon
 - [ ] Publish
+- [ ] i18n
 - [ ] Customize Action bar position
 - [ ] Multi-Drag Mode (Selection Mode)
 - [ ] Filter bar (title and url)
 
-## Know Bugs
+## Known Issues
 
 - [ ] Drag-Drop Function conflict with other tab management extensions, for example, Tree Style Tab
 - [ ] tab icon color not updating on theme update (In-page popup)
