@@ -4,7 +4,7 @@ import { get_tabChangeEvents } from "@/utils";
 import { get_options } from "@/pages/options/options_schema"
 import { server_install } from "./browserProxy/server";
 import { ASSET } from "@/strings"
-
+import { menu_init,menu_click_listener_install } from "./menu/menu";
 console.log("Background script running");
 
 // Update popup action based on options
@@ -31,3 +31,6 @@ server_install([
 	{ api: 'tabs', event: 'onCreated' },
 	{ api: 'theme', event: 'onUpdated' }
 ]);
+
+menu_init();
+menu_click_listener_install();
