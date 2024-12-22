@@ -70,7 +70,7 @@ function gererate_manifest() {
 	function merge_mainfest(base: object|Array<any>, source:object|Array<any> ) {
 		if (Array.isArray(base)) {
 			return base.concat(source);
-		} else if (typeof base === "object") {
+		} else if (base instanceof Object) {
 			const result = {...base};
 			for (const key in source) {
 				if (key in base) {//@ts-ignore
@@ -93,7 +93,7 @@ function gererate_manifest() {
 // 
 async function build_extension() {
 	console.log("Building extension...");
-	Object.entries(buildConfigs).forEach(async ([name, config]) => {
+	const buildPromises = Object.entries(buildConfigs).map(async ([name, config]) => {
 		console.log(`Building ${name}...`);
 		const result = await Bun.build(config);
 		if (!result.success) {
@@ -105,12 +105,24 @@ async function build_extension() {
 		}
 		console.log(`Build ${name} successful`);
 	});
+	await Promise.all(buildPromises);
 }
 
+function workaround_fix_next_themes_html_class() {
+	console.log("Workaround for next-themes...");
+	const target = path.join(buildDir, "/pages/tray/tray_in_page.js");
+	const targetStr = "P = document.documentElement";
+	const replaceStr = `P = document.getElementById("Tabs_Tray_in_page_container")`;
+	const content = fs.readFileSync(target, "utf-8");
+	const newContent = content.replace(targetStr, replaceStr);
+	fs.writeFileSync(target, newContent);
+	console.log("Workaround for next-themes fixed");
+}
 async function main() {
 	clean_build_folder();
 	await build_extension();
 	copy_extension_files();
+	workaround_fix_next_themes_html_class();
 	gererate_manifest();
 }
 

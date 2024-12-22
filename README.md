@@ -54,4 +54,3 @@ package manager & bundler: [bun](https://bun.sh/)
 
 - [ ] Drag-Drop Function conflict with other tab management extensions, for example, Tree Style Tab
 - [ ] tab icon color not updating on theme update (In-page popup)
-- [ ] In-Page mode will add "dark"/"light" class  to the global html element
