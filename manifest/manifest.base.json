@@ -1,7 +1,9 @@
 {
   "manifest_version": 3,
   "name": "Tabs Tray",
-  "version": "0.0.1",
+  "version": "0.0.0",
+  "author":"Dylan Ulster",
+  "homepage_url": "https://github.com/du33169/TabsTray",
   "description": "View current tabs with titles and thumbnails using a full window.",
   "icons": {
     "48": "icons/icon.svg"

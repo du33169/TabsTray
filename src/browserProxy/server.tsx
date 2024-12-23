@@ -2,7 +2,7 @@
 //server side
 import { ACTION } from './defines'
 function get_api(api: string, item: string):any {
-	if (browser.hasOwnProperty(api) && browser[api as keyof typeof browser].hasOwnProperty(item)) {
+	if (api in browser && item in browser[api as keyof typeof browser]) {
 		const apiObj=browser[api as keyof typeof browser];
 		return apiObj[item as keyof typeof apiObj];
 	} else {

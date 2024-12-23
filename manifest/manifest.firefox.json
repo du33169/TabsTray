@@ -9,7 +9,7 @@
 	},
 	"browser_specific_settings": {
 		"gecko": {
-			"id": "Tabs_Tray@du33169.tech"
+			"id": "webext@com.github.du33169.TabsTray"
 		}
 	}
 }

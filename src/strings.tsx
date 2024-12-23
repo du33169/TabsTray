@@ -1,10 +1,12 @@
+const manifest = browser.runtime.getManifest();
+
 const META = {
-	EXT_NAME: "Tabs Tray" as string,
-	HOMEPAGE_URL: "https://github.com/du33169/TabsTray" as string,
-	AUTHOR: "Dylan Ulster (@du33169)" as string,
+	EXT_NAME: manifest.name as string,
+	HOMEPAGE_URL: manifest.homepage_url as string,
+	AUTHOR: manifest.author as string,
 	CONTRIBUTORS: [] as string[],
 	SPONSORS: [] as string[],
-	VERSION: "1.0.0" as string,
+	VERSION: manifest.version as string,
 	REPORT_BUG_URL: "https://github.com/du33169/TabsTray/issues/new" as string,
 	SPONSOR_URL: "https://github.com/sponsors/du33169" as string,
 }

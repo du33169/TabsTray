@@ -6,17 +6,27 @@ import {
 	Box,
 	HStack,
 	Stack,
-	Separator
+	Separator,
+	List
 } from '@chakra-ui/react';
 import { MdOutlineFavorite, MdBugReport } from 'react-icons/md';
 import { Field } from '@/components/ui/field';
 import { Button } from '@/components/ui/button';
 import { META } from "@/strings"
+import { useEffect, useState } from 'react';
 
 // Main Component
 function About() {
-
-
+	const [platformInfo, setPlatformInfo] = useState<browser.runtime.PlatformInfo | null>(null);
+	const [browserInfo, setBrowserInfo] = useState<browser.runtime.BrowserInfo | null>(null);
+	useEffect(() => {
+		browser.runtime.getPlatformInfo().then(info => {
+			setPlatformInfo(info);
+		});
+		browser.runtime.getBrowserInfo().then(info => {
+			setBrowserInfo(info);
+		});
+	}, []);
 	return (
 		<>
 			<Fieldset.Root width="100%" size={"lg"}>
@@ -28,19 +38,26 @@ function About() {
 				</Stack>
 
 				<Fieldset.Content>
-
+					<Field label={"Version"} orientation={"horizontal"}>
+						{META.VERSION}
+					</Field>
 					<Field label={"Home Page"} orientation={"horizontal"}>
 						<Link href={META.HOMEPAGE_URL} >{META.HOMEPAGE_URL}</Link>
 					</Field>
 					<Field label={"Author"} orientation={"horizontal"}>
 						{META.AUTHOR}
 					</Field>
-					<Field label={"Version"} orientation={"horizontal"}>
-						{META.VERSION}
-					</Field>
+
 					<Field label={"Report Bugs"} >
 						<HStack align={"stretch"} justifyContent={"space-between"} width="100%">
-							<Box>{/* TODO: display debug info and copy button */}</Box>
+							<Box>
+								<List.Root>
+									<List.Item>Browser: {browserInfo?.vendor} {browserInfo?.name} {browserInfo?.version}</List.Item>
+									<List.Item>System: {platformInfo?.os} {platformInfo?.arch}</List.Item>
+								</List.Root>
+								
+								
+							</Box>
 							<Button asChild>
 
 								<Link href={META.REPORT_BUG_URL} ><MdBugReport />New Issue</Link>
@@ -56,9 +73,9 @@ function About() {
 							<Box>
 								{META.SPONSORS.length > 0 ? META.SPONSORS.join(", ") : "No sponsors yet"}
 							</Box>
-							<Button asChild>
+							<Button asChild colorPalette={"pink"}>
 
-								<Link href={META.SPONSOR_URL} ><MdOutlineFavorite />Donate</Link>
+								<Link href={META.SPONSOR_URL} ><MdOutlineFavorite />Support Us!</Link>
 							</Button>
 						</HStack>
 					</Field>
