@@ -17,7 +17,7 @@ function App() {
                 {/* navigation bar */}
                 <Box
                     display={"flex"}
-                    position={"sticky"} top={0} width="100vw"
+                    position={"sticky"} top={0} width="100vw" zIndex={9999}
                     backgroundColor={TRAY_COLORS.container_background}
                     shadow={"md"} shadowColor={TRAY_COLORS.container_shadow}
                     justifyContent={"center"}
@@ -42,23 +42,21 @@ function App() {
 
                     </HStack>
                 </Box>
-                <AbsoluteCenter axis={"horizontal"} width={"100%"} padding="1rem">
 
-                    {/* tab container, controlled */}
-                    <Tabs.Root value={tabValue} variant={"outline"} size={"lg"} 
-                        width={"100%"} maxWidth={"700px"} marginTop={"1rem"}
-                    >
-                        <VStack width={"100%"} alignItems={"stretch"}>
-                            <Heading size={"lg"} textAlign={"center"}>{tabValue == "options" ? META.EXT_NAME + " " + "Options" : "About" + " " + META.EXT_NAME}</Heading>
-                            <Tabs.Content value="options" width={"100%"}>
-                                <OptionsForm />
-                            </Tabs.Content>
-                            <Tabs.Content value="about" width={"100%"}>
-                                <About />
-                            </Tabs.Content>
-                        </VStack>
-                    </Tabs.Root>
-                </AbsoluteCenter>
+                {/* tab container, controlled */}
+                <Tabs.Root value={tabValue} variant={"outline"} size={"lg"} 
+                    width={"100%"} maxWidth={"min(700px,100vw)"} padding="1rem" margin={"0 auto"}
+                >
+                    <VStack width={"100%"} alignItems={"stretch"}>
+                        <Heading size={"lg"} textAlign={"center"}>{tabValue == "options" ? META.EXT_NAME + " " + "Options" : "About" + " " + META.EXT_NAME}</Heading>
+                        <Tabs.Content value="options" width={"100%"}>
+                            <OptionsForm />
+                        </Tabs.Content>
+                        <Tabs.Content value="about" width={"100%"}>
+                            <About />
+                        </Tabs.Content>
+                    </VStack>
+                </Tabs.Root>
             </Box>
         </Provider>
     );

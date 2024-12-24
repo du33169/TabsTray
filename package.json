@@ -1,6 +1,7 @@
 {
   "name": "viewtabs",
   "devDependencies": {
+    "@chakra-ui/cli": "^3.2.3",
     "@types/bun": "latest",
     "@types/firefox-webext-browser": "^120.0.4",
     "@types/fs-extra": "^11.0.4",
@@ -8,6 +9,7 @@
     "@types/react-dom": "^18.3.5",
     "@types/sortablejs": "^1.15.8",
     "@types/yargs": "^17.0.33",
+    "license-report": "^6.7.1",
     "web-ext": "^8.3.0",
     "yargs": "^17.7.2"
   },

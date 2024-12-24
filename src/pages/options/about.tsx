@@ -1,24 +1,40 @@
 import {
 	Fieldset,
 	Link,
-	Text,
-	Collapsible,
+	Code,
 	Box,
 	HStack,
 	Stack,
 	Separator,
 	List
 } from '@chakra-ui/react';
-import { MdOutlineFavorite, MdBugReport } from 'react-icons/md';
+
+import {
+	AccordionItem,
+	AccordionItemContent,
+	AccordionItemTrigger,
+	AccordionRoot,
+} from "@/components/ui/accordion"
 import { Field } from '@/components/ui/field';
 import { Button } from '@/components/ui/button';
-import { META } from "@/strings"
+import { MdOutlineFavorite, MdBugReport } from 'react-icons/md';
+
+import { META, ASSET } from "@/strings"
 import { useEffect, useState } from 'react';
+
+interface LicenseDataItem {
+	name: string
+	licenseType: string
+	installedVersion: string
+	licenseText?: string
+}
 
 // Main Component
 function About() {
 	const [platformInfo, setPlatformInfo] = useState<browser.runtime.PlatformInfo | null>(null);
 	const [browserInfo, setBrowserInfo] = useState<browser.runtime.BrowserInfo | null>(null);
+	const [licenseText, setLicenseText] = useState<string>("");
+	const [licenseData, setLicenseData] = useState<LicenseDataItem[]>([]);
 	useEffect(() => {
 		browser.runtime.getPlatformInfo().then(info => {
 			setPlatformInfo(info);
@@ -26,13 +42,21 @@ function About() {
 		browser.runtime.getBrowserInfo().then(info => {
 			setBrowserInfo(info);
 		});
+		fetch(ASSET.LICENSE)
+			.then(response => response.text())
+			.then(text => setLicenseText(text))
+			.catch(error => console.error(error));
+		fetch(ASSET.LICENSE_DATA)
+			.then(response => response.json())
+			.then(data => setLicenseData(data))
+			.catch(error => console.error(error));
 	}, []);
 	return (
 		<>
-			<Fieldset.Root width="100%" size={"lg"}>
+			<Fieldset.Root width="100%" fontSize={"md"} >
 				<Stack>
-				{/* <Fieldset.Legend>About {META.EXT_NAME}</Fieldset.Legend> */}
-				{/* <Fieldset.HelperText>
+					{/* <Fieldset.Legend>About {META.EXT_NAME}</Fieldset.Legend> */}
+					{/* <Fieldset.HelperText>
 					These options will be synced using the browser's storage API.
 				</Fieldset.HelperText> */}
 				</Stack>
@@ -41,7 +65,7 @@ function About() {
 					<Field label={"Version"} orientation={"horizontal"}>
 						{META.VERSION}
 					</Field>
-					<Field label={"Home Page"} orientation={"horizontal"}>
+					<Field label={"Homepage"} orientation={"horizontal"}>
 						<Link href={META.HOMEPAGE_URL} >{META.HOMEPAGE_URL}</Link>
 					</Field>
 					<Field label={"Author"} orientation={"horizontal"}>
@@ -55,8 +79,8 @@ function About() {
 									<List.Item>Browser: {browserInfo?.vendor} {browserInfo?.name} {browserInfo?.version}</List.Item>
 									<List.Item>System: {platformInfo?.os} {platformInfo?.arch}</List.Item>
 								</List.Root>
-								
-								
+
+
 							</Box>
 							<Button asChild>
 
@@ -75,24 +99,34 @@ function About() {
 							</Box>
 							<Button asChild colorPalette={"pink"}>
 
-								<Link href={META.SPONSOR_URL} ><MdOutlineFavorite />Support Us!</Link>
+								<Link href={META.SPONSOR_URL} ><MdOutlineFavorite />Sponsor</Link>
 							</Button>
 						</HStack>
 					</Field>
-					
+
 					<Separator />
-					<Field label={"License"} >
-						<Collapsible.Root>
-							<Collapsible.Trigger paddingY="3">View License</Collapsible.Trigger>
-							<Collapsible.Content>
-								<Box padding="4" borderWidth="1px">
-									Lorem Ipsum is simply dummy text of the printing and typesetting
-									industry. Lorem Ipsum has been the industry's standard dummy text ever
-									since the 1500s, when an unknown printer took a galley of type and
-									scrambled it to make a type specimen book.
-								</Box>
-							</Collapsible.Content>
-						</Collapsible.Root>
+					<Field label={"License"}>
+						<AccordionRoot collapsible>
+							<AccordionItem key={0} value={META.EXT_NAME}>
+								<AccordionItemTrigger>{META.EXT_NAME}: {META.LICENSE}</AccordionItemTrigger >
+								<AccordionItemContent asChild>
+									<Box asChild padding="4" borderWidth="1px" fontSize={"sm"} whiteSpace={"pre-wrap"} wordWrap={"break-word"} overflowWrap={"break-word"}>
+										<pre>{licenseText}</pre>
+									</Box>
+								</AccordionItemContent>
+							</AccordionItem>
+							{licenseData.map((item, index) => (
+								<AccordionItem key={index + 1} value={item.name}>
+									<AccordionItemTrigger>{item.name}: {item.licenseType}</AccordionItemTrigger >
+									<AccordionItemContent asChild>
+										<Box asChild padding="4" borderWidth="1px" fontSize={"sm"} whiteSpace={"pre-wrap"} wordWrap={"break-word"} overflowWrap={"break-word"}>
+											<pre>{item.licenseText}</pre>
+										</Box>
+									</AccordionItemContent>
+								</AccordionItem>
+
+							))}
+						</AccordionRoot>
 					</Field>
 				</Fieldset.Content>
 			</Fieldset.Root>
