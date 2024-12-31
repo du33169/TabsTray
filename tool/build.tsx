@@ -5,11 +5,13 @@ import { build_extension } from "./bun_build_ext";
 import { gererate_manifest } from "./gen_manifest";
 import { workaround_fix_next_themes_html_class } from "./workaround_next_themes_html";
 import { generate_license_data } from "./export_license";
+import { pack_ext, pack_src } from "./pack";
 //directories
 const projDir = path.resolve(path.join(__dirname, ".."));
 console.log("Project directory: " + projDir);
 const srcDir = path.join(projDir, "src");
 const buildDir = path.join(projDir, "build");
+const distDir = path.join(projDir, "dist");
 const extDir = path.join(projDir, "ext");
 const manifestDir = path.join(projDir, "manifest");
 
@@ -30,6 +32,10 @@ const argv = yargs(process.argv)
 		description: "Target browser",
 		choices: ["chrome", "firefox"],
 		default: "firefox",
+	}).option("pack", {
+		type: "boolean",
+		description: "Pack extension and pack source code",
+		default: false
 	}).parseSync();
 
 const extVersion = argv.version;
@@ -66,6 +72,10 @@ async function main() {
 	workaround_fix_next_themes_html_class(buildDir);
 	gererate_manifest(manifestDir, buildDir, extVersion, isFirefox);
 	generate_license_data(projDir, buildDir);
+	if(argv.pack){
+		pack_ext(buildDir, distDir, extVersion);
+		pack_src(projDir, distDir, extVersion);
+	}
 }
 
 await main();

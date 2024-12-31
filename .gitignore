@@ -177,3 +177,6 @@ dist
 
 # license-report, for custom registry
 .license-reportrc
+
+# vscode
+.vscode
