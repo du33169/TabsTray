@@ -4,7 +4,7 @@ import { MdLanguage } from "react-icons/md";
 import { CloseButton } from "@/components/ui/close-button";
 import { Card, Image, AspectRatio, Text, HStack, Container, Icon, Center, Show, Box } from "@chakra-ui/react";
 
-import { TRAY_COLORS } from "@/components/ui/theme";
+import { TRAY_COLOR_TOKENS } from "@/theme/tray_color";
 
 function Tab({ browserApiProvider = browser, tab, showThumbnails }: { browserApiProvider?: typeof browser, tab: browser.tabs.Tab, showThumbnails: boolean }) {
     const [thumbnailUri, setThumbnailUri] = useState<string | null>(null); // 创建状态
@@ -35,8 +35,8 @@ function Tab({ browserApiProvider = browser, tab, showThumbnails }: { browserApi
         <Card.Root asChild
             boxShadow="0 4px 8px rgba(0, 0, 0, 0.1)"
             borderRadius="12px" overflow="hidden" textAlign="left"
-            backgroundColor={TRAY_COLORS.container_background}
-            borderColor={tab.active ? TRAY_COLORS.accent : TRAY_COLORS.container_border}
+            backgroundColor={TRAY_COLOR_TOKENS.container_background}
+            borderColor={tab.active ? TRAY_COLOR_TOKENS.accent : TRAY_COLOR_TOKENS.container_border}
             borderWidth={tab.active ? "3px" : "1px"}
         >
             <a key={tab.id} href={tab.url} target="_blank" onClick={switch_to_tab} className="tab-card" data-tab-id={tab.id}>
@@ -50,7 +50,7 @@ function Tab({ browserApiProvider = browser, tab, showThumbnails }: { browserApi
                                 }
                             </Icon>
                             <Center asChild>
-                                <Text truncate textStyle="sm" lineClamp={showThumbnails ? 1 : 3} color={TRAY_COLORS.global_foreground} wordBreak={"break-all"}>
+                                <Text truncate textStyle="sm" lineClamp={showThumbnails ? 1 : 3} color={TRAY_COLOR_TOKENS.global_foreground} wordBreak={"break-all"}>
                                     {tab.title}
                                 </Text>
                             </Center>
@@ -64,7 +64,7 @@ function Tab({ browserApiProvider = browser, tab, showThumbnails }: { browserApi
                             {
                                 thumbnailUri ?
                                     <Image src={thumbnailUri} alt="Thumbnail" /> :
-                                    <Center color={`${TRAY_COLORS.global_foreground}/40`}>
+                                    <Center color={`${TRAY_COLOR_TOKENS.global_foreground}/40`}>
                                         <MdLanguage size={"30%"}  title="Thumbnail Unavailable" />
                                     </Center>
                             }

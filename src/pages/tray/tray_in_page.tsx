@@ -16,7 +16,7 @@ import { Center } from "@chakra-ui/react";
 import { browserApi, browserEvent, client_install, client_uninstall } from "@/browserProxy/client";
 import { Tray } from "./tray";
 import { META, KEY } from "@/strings"
-import { TRAY_COLORS } from "@/components/ui/theme";
+import { TRAY_COLOR_TOKENS } from "@/theme/tray_color";
 
 interface DrawerState {
 	exists: boolean;
@@ -61,11 +61,11 @@ function TrayDrawer({ onClose }: { onClose: () => void }) {
 			<DrawerBackdrop />
 			<DrawerContent
 				portalled={false} colorPalette="brand"
-				backgroundColor={TRAY_COLORS.global_background} color={TRAY_COLORS.global_foreground}
+				backgroundColor={TRAY_COLOR_TOKENS.global_background} color={TRAY_COLOR_TOKENS.global_foreground}
 				roundedTop={"2xl"}
 				maxH={"90vh"}
 			>
-				<DrawerHeader borderColor={TRAY_COLORS.container_border}>
+				<DrawerHeader borderColor={TRAY_COLOR_TOKENS.container_border}>
 					<DrawerTitle><Center>{META.EXT_NAME}</Center></DrawerTitle>
 				</DrawerHeader>
 				<DrawerBody>

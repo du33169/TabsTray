@@ -10,7 +10,7 @@ import { IconButton, Show } from "@chakra-ui/react";
 
 import { open_page_singleton } from "@/utils"
 import { ASSET } from "@/strings"
-import { TRAY_COLORS } from "@/components/ui/theme";
+import { TRAY_COLOR_TOKENS } from "@/theme/tray_color";
 import { TrayMode,fetchTrayMode } from "./mode";
 
 function TrayActionBar(
@@ -44,7 +44,7 @@ function TrayActionBar(
     }
     return (
         <ActionBarRoot open={true}>
-            <ActionBarContent portalled={false} colorPalette="brand" backgroundColor={TRAY_COLORS.container_background} borderColor={TRAY_COLORS.container_border}>
+            <ActionBarContent portalled={false} colorPalette="brand" backgroundColor={TRAY_COLOR_TOKENS.container_background} borderColor={TRAY_COLOR_TOKENS.container_border}>
 
                 <Show when={mode !== TrayMode.TAB}>
                     <IconButton variant={"ghost"} onClick={on_expand}

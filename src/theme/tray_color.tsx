@@ -1,13 +1,5 @@
-// https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme#colors
+type COLOR = browser._manifest.ThemeColor;
 
-import {
-	defineConfig,
-	defineRecipe,
-	FieldLabel
-} from "@chakra-ui/react";
-import type { SystemConfig } from "@chakra-ui/react";
-
-type COLOR= browser._manifest.ThemeColor;
 interface TrayColors {
 	global_background: COLOR,
 	container_background: COLOR,
@@ -56,14 +48,14 @@ const FALLBACK_TRAY_COLORS_DARK: TrayColors = {
 function get_tray_colors_from_firefox(themeColors: browser._manifest._ThemeTypeColors, dark: boolean): TrayColors {
 	const fallbackColors = (dark ? FALLBACK_TRAY_COLORS_DARK : FALLBACK_TRAY_COLORS_LIGHT);
 
-	const global_background_get = () => themeColors.frame;
-	const container_background_get = () =>themeColors.toolbar ||  themeColors.popup || themeColors.sidebar;
-	const container_border_get = () => themeColors.popup_border || themeColors.toolbar_field_border || themeColors.sidebar_border;
-	const container_shadow_get = () => themeColors.popup_highlight || themeColors.toolbar_field_highlight || themeColors.sidebar_highlight;
-	const global_foreground_get = () => themeColors.bookmark_text || themeColors.toolbar_text || themeColors.popup_text || themeColors.sidebar_text;
+	const global_background_get = () => themeColors.frame || themeColors.frame_inactive;
+	const container_background_get = () =>themeColors.toolbar || themeColors.toolbar_field || themeColors.toolbar_field_focus || themeColors.popup || themeColors.sidebar;
+	const container_border_get = () => themeColors.toolbar_field_border || themeColors.toolbar_field_border_focus || themeColors.popup_border ||  themeColors.sidebar_border;
+	const container_shadow_get = () => themeColors.toolbar_field_highlight || themeColors.popup_highlight ||  themeColors.sidebar_highlight;
+	const global_foreground_get = () => themeColors.toolbar_text || themeColors.bookmark_text ||  themeColors.popup_text || themeColors.sidebar_text;
 	const container_hover_get = () => null ;
 	//@ts-ignore: button_primary is a private property
-	const accent_get = () => themeColors.button_primary || global_foreground_get();
+	const accent_get = () => themeColors.button_primary || themeColors.icons_attention ||  global_foreground_get();
 	//@ts-ignore: button_primary is a private property
 	const on_accent_get = () => themeColors.button_primary_color || global_background_get() ;
 	//@ts-ignore: button_primary is a private property
@@ -90,60 +82,10 @@ const BRAND_PALETTE_FIREFOX = {
 	emphasized: { value: `${TRAY_COLOR_TOKENS.accent_active}` },
 	focusRing: { value: `{colors.${TRAY_COLOR_TOKENS.accent_active}` },
 }
-const TRAY_COLORS = TRAY_COLOR_TOKENS;
 
 
 //@ts-ignore CURRENT_BROWSER defined in build script
 const BRAND_PALETTE = BRAND_PALETTE_FIREFOX;//CURRENT_BROWSER === "firefox" ? FIREFOX_COLORS_FIREFOX : FIREFOX_COLORS_CHROME;
 
-function get_tray_color_tokens_from_firefox(ThemeColors: browser._manifest._ThemeTypeColors) {
-	const result: Record<string, any> = {};
-	const trayColors_light = get_tray_colors_from_firefox(ThemeColors, false);
-	const trayColors_dark = get_tray_colors_from_firefox(ThemeColors, true);
-	console.log('finalTrayColors light:', trayColors_light);
-	console.log('finalTrayColors dark:', trayColors_dark);
-	for (const [name, literal] of Object.entries(TRAY_COLOR_TOKENS)) {
-		//@ts-ignore
-		const transformedValue = { _light: trayColors_light[name],  _dark: trayColors_dark[name] }
-		result[literal] = { value: transformedValue };
-	}
-	return result;
-}
-async function get_theme_config_content(browserApiProvider: typeof browser = browser): Promise<{ themeConfigContent: SystemConfig, colorScheme: string }> {
-	const theme = (await browserApiProvider.theme.getCurrent());
-	const themeColors = theme.colors!;
 
-	const colorScheme = (theme.properties!.color_scheme!);
-
-	console.log('browser theme:', theme);
-
-	console.log('browsertheme colors:', themeColors);
-
-	const finalTrayColors = get_tray_color_tokens_from_firefox(themeColors)
-
-	const themeConfigContent = {
-		theme: {
-			semanticTokens: {//@ts-ignore
-				colors: {
-					brand: BRAND_PALETTE,
-					...finalTrayColors
-				}
-			},
-		}
-	};
-	return { themeConfigContent, colorScheme }
-}
-async function get_icon_color(browserApiProvider: typeof browser = browser) {
-	// used for non-theme related items like svg icons, etc
-	// @ts-ignore
-	if (IS_FIREFOX) {
-		const theme = (await browserApiProvider.theme.getCurrent())
-		const themeColor = theme.colors!
-		// vertical mode: action button follow tab_background_text
-		// horizontal mode: action button follow toolbar_text
-		// default to tab_background_text as mostly display as pinned tab
-		return themeColor.icons || themeColor.tab_background_text || (theme.properties!.color_scheme === 'dark' ? '#ffffff' : '#000000');
-	}
-	else return '#000000';//window.matchMedia('(prefers-color-scheme: dark)').matches? '#ffffff' : '#000000';
-}
-export { TRAY_COLORS, BRAND_PALETTE, get_icon_color, get_theme_config_content }
+export {TRAY_COLOR_TOKENS, BRAND_PALETTE,get_tray_colors_from_firefox}

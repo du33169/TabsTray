@@ -1,6 +1,6 @@
 import ReactDOMServer from 'react-dom/server';
 import { get_tabChangeEvents } from "@/utils";
-import { get_icon_color } from '@/components/ui/theme';
+import { get_icon_color } from '@/theme/theme';
 import { get_options, OptionsSchema } from '@/pages/options/options_schema';
 import { isRestrictedUrl } from '@/utils';
 import { META } from '@/strings';

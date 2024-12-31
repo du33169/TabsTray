@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import root from "react-shadow"
 
-import { get_theme_config_content } from "./theme";
+import { get_theme_config_content } from "@/theme/theme";
 
 const varRoot = ":host"
 
@@ -71,8 +71,11 @@ export function Provider(props: ProviderProps) {
     if (IS_FIREFOX) {
       fetchTheme();
       browserEvent.theme.onUpdated.addListener(fetchTheme);
+      //also add media query listener for color scheme change
+      window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", fetchTheme);
       return () => {
         browserEvent.theme.onUpdated.removeListener(fetchTheme);
+        window.matchMedia("(prefers-color-scheme: dark)").removeEventListener("change", fetchTheme);
       };
     }
   }, []);

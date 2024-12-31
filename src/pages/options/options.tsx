@@ -6,20 +6,20 @@ import About from "./about";
 import { Provider } from "@/components/ui/provider"
 import { Center, AbsoluteCenter, Tabs, Text, Box, Bleed, Icon, Image, Heading, HStack, VStack } from "@chakra-ui/react";
 // import { Button } from "../components/ui/button";
-import { TRAY_COLORS } from "@/components/ui/theme";
+import { TRAY_COLOR_TOKENS } from "@/theme/tray_color";
 import { ASSET, META } from "@/strings";
 function App() {
     const [tabValue, setTabValue] = useState("options");
     return (
         <Provider>
 
-            <Box backgroundColor={TRAY_COLORS.global_background} minHeight={"100vh"} colorPalette="brand">
+            <Box backgroundColor={TRAY_COLOR_TOKENS.global_background} minHeight={"100vh"} colorPalette="brand">
                 {/* navigation bar */}
                 <Box
                     display={"flex"}
                     position={"sticky"} top={0} width="100vw" zIndex={9999}
-                    backgroundColor={TRAY_COLORS.container_background}
-                    shadow={"md"} shadowColor={TRAY_COLORS.container_shadow}
+                    backgroundColor={TRAY_COLOR_TOKENS.container_background}
+                    shadow={"md"} shadowColor={TRAY_COLOR_TOKENS.container_shadow}
                     justifyContent={"center"}
                 >
                     {/* navigation content */}
