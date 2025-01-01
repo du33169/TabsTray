@@ -27,6 +27,8 @@ With titles and thumbnails presented, you can effortlessly spot and switch to th
 
 [<img src="./assets/get-the-addon-fx-apr-2020.svg" alt="get-the-addon-fx-apr-2020" style="width:200px;" />](https://addons.mozilla.org/zh-CN/firefox/addon/tabs-tray/)
 
+[Chrome Support?](https://github.com/du33169/TabsTray/issues/1)
+
 ## Usage
 
 Once installed, click the extension button or use the shortcut (<kbd>Alt+A</kbd> by default) to launch Tabs Tray. You can easily view and manage your tabs or click on one to switch to it.
@@ -47,16 +49,12 @@ Three modes are available:
 	```
 3. Build:
 	```bash
-	# release build (minified)
-	bun run build --version x.x.x
 	# dev build 
 	bun run dev
 	```
-	Output is located at `./build` directory.
+	Output to `./build` directory.
 
-4. [Test extension in firefox](about:debugging#/runtime/this-firefox)
-
-
+4. Test extension in firefox using `about:debugging#/runtime/this-firefox`.
 
 ## Todo
 
@@ -72,5 +70,5 @@ Three modes are available:
 ## Known Issues
 
 - [ ] Drag-Drop Function conflict with other tab management extensions, for example, Tree Style Tab
-- [ ] tab icon color not updating on theme update (In-page popup)
+- [ ] tab icon color not updated on theme update (In-page drawer)
 - [ ] Popup not expanding under some situation
