@@ -103,7 +103,11 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
         return result;
     }
     return (
-        <Box minWidth={"min(700px,100vw)"} minHeight={mode === TrayMode.TAB ? "100vh" : (mode === TrayMode.POPUP ? "600px" : "60vh")} colorPalette="brand" backgroundColor={TRAY_COLOR_TOKENS.global_background}>
+        <Box
+            minWidth={(mode === TrayMode.POPUP ? "800px" : "100vw")}
+            minHeight={mode === TrayMode.TAB ? "100vh" : (mode === TrayMode.POPUP ? "600px" : "60vh")}
+            colorPalette="brand" backgroundColor={TRAY_COLOR_TOKENS.global_background}
+        >
             {/* 800x600 is the maximal size of the popup window */}
             <Grid
                 templateColumns="repeat(auto-fill, minmax(300px, 1fr))" paddingX="max(40px,1vw)" paddingTop="max(20px,0.5vw)" asChild>

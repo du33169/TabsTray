@@ -14,7 +14,7 @@ async function build_extension(srcDir: string, buildDir: string, isFirefox: bool
 			"IS_FIREFOX": ""
 		} ,
 		sourcemap: dev? "linked":"none",
-		minify: !dev,
+		// minify: !dev,
 	}
 	const extScript_BuildConfig: BuildConfig = {
 		...commonBuildConfig,
