@@ -118,8 +118,8 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
                     // swapThreshold={0.5}
                     onEnd={move_tab}
                 >
-                    {sortableTabDataList.map((tabData) => (
-                        <GridItem key={tabData.id}>
+                    {sortableTabDataList.map((tabData,index) => (
+                        <GridItem key={index}>
                             <Box padding="3%" position="relative"
                                 _hover={{
                                     transform: "translateY(-4px)",
