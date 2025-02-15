@@ -56,19 +56,6 @@ Three modes are available:
 
 4. Test extension in firefox using `about:debugging#/runtime/this-firefox`.
 
-## Todo
+## Known Issues & Todo
 
-- [ ] [Firefox only] Right click menu with browser tab operations (menus.overrideContext)
-- [ ] Publish
-- [ ] Landing Page on install
-- [ ] Tooltip to show thumbnail on hover under compact mode
-- [ ] i18n
-- [ ] Customize Action bar position
-- [ ] Multi-Drag Mode (Selection Mode)
-- [ ] Filter bar (title and url)
-
-## Known Issues
-
-- [ ] Drag-Drop Function conflict with other tab management extensions, for example, Tree Style Tab
-- [ ] tab icon color not updated on theme update (In-page drawer)
-- [ ] Popup not expanding under some situation
+See the [TabsTray Project Page](https://github.com/users/du33169/projects/3).
