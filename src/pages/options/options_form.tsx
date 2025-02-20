@@ -15,6 +15,7 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { Field } from '@/components/ui/field';
 import type { Options } from './options_schema';
+import { updateIcon } from '@/action/action_icon';
 import { defaultValues, OptionsSchema, optionText2Label, set_options, get_options } from './options_schema';
 import {META} from "@/strings"
 // Utility function to render fields based on Zod schema
@@ -77,6 +78,7 @@ function OptionsForm() {
 			toaster.success({
 				description: 'Settings saved successfully!'
 			});
+			updateIcon(); // update enable state of icon
 		} else {
 			toaster.error({ description: 'Validation failed: ' + parsed.error.message });
 		}
