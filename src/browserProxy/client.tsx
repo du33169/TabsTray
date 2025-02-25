@@ -1,6 +1,26 @@
 //client side
 import { ACTION } from './defines'
 
+const browserApiTest = new Proxy(
+	{},
+	{
+		get(_, api) {
+			return new Proxy(
+				{},
+				{
+					get(_, method) {
+						return browser.runtime.sendMessage({ //because require promise return
+							action: ACTION.BROWSER_API_TEST,
+							api: api,
+							method: method,
+						});
+					},
+				}
+			);
+		},
+	}
+);
+
 const browserApi = new Proxy(
 	{},
 	{
@@ -116,4 +136,4 @@ function client_uninstall() {
 	});
 	browser.runtime.onMessage.removeListener(handleMessage);
 }
-export { browserApi , browserEvent, client_install,client_uninstall };
+export { browserApiTest, browserApi , browserEvent, client_install,client_uninstall };

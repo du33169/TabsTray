@@ -61,3 +61,17 @@ export function isRestrictedUrl(url: string): boolean {
 	});
 
 }
+
+export function running_in_background_script(): boolean {
+	// @ts-ignore
+	if (typeof browser !== 'undefined' && browser.runtime && browser.runtime.getBackgroundPage) {
+		return true;
+	}
+	return false;
+}
+export function running_in_content_script(): boolean {
+	if (typeof browser !== 'undefined' && browser.runtime && browser.runtime.id) {
+		return true;
+	}
+	return false;
+}

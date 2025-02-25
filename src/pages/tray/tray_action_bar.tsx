@@ -7,15 +7,15 @@ import {
 // import { Button } from "../components/ui/button";
 import { IconButton, Show } from "@chakra-ui/react";
 
-
 import { open_page_singleton } from "@/utils"
 import { ASSET } from "@/strings"
 import { TRAY_COLOR_TOKENS } from "@/theme/tray_color";
 import { TrayMode,fetchTrayMode } from "./mode";
+import { ThumbnailApiChecker } from "./thumbnailApiChecker";
 
 function TrayActionBar(
     { browserApiProvider = browser, showThumbnails, setShowThumbnails }:
-    { browserApiProvider?: typeof browser, showThumbnails: boolean | null, setShowThumbnails: (show: boolean) => void }
+    { browserApiProvider?: typeof browser, showThumbnails: boolean, setShowThumbnails: (show: boolean) => void }
 ) {
     const [mode, setMode] = useState<TrayMode>(TrayMode.TAB);
 
@@ -57,9 +57,12 @@ function TrayActionBar(
                     <MdAdd />
                 </IconButton>
 
-                <IconButton variant={"ghost"} onClick={on_toggle_thumbnails} >
-                    {showThumbnails ? <MdPhotoCamera /> : <MdNoPhotography />}
-                </IconButton>
+                <ThumbnailApiChecker browserApiProvider={browserApiProvider} enableChecking={showThumbnails} >
+                    <IconButton variant={"ghost"} onClick={on_toggle_thumbnails} >
+                        {showThumbnails ? <MdPhotoCamera /> : <MdNoPhotography />}
+                    </IconButton>
+                </ThumbnailApiChecker>
+                
                 <IconButton variant={"ghost"} onClick={on_settings}>
                     <MdSettings />
                 </IconButton>

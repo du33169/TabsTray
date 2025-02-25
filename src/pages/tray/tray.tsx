@@ -11,6 +11,7 @@ import { get_options, set_options } from "../options/options_schema";
 import { get_icon_color } from "@/theme/theme";
 import { TRAY_COLOR_TOKENS } from "@/theme/tray_color";
 import { TrayMode,fetchTrayMode } from "./mode";
+
 interface SortableTabData {
     id: number;
     tab: browser.tabs.Tab;
@@ -18,7 +19,7 @@ interface SortableTabData {
 function Tray({ browserApiProvider = browser, browserEventProvider = browser }: { browserApiProvider?: typeof browser, browserEventProvider?: typeof browser }) {
     const mode = fetchTrayMode();
     const [tabs, setTabs] = useState<browser.tabs.Tab[]>([]);
-    const [showThumbnails, setShowThumbnails] = useState<boolean | null>(null);
+    const [showThumbnails, setShowThumbnails] = useState<boolean>(false);
 
     const [sortableTabDataList, setSortableTabDataList] = useState<SortableTabData[]>([]);
     useEffect(() => {

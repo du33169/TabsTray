@@ -6,7 +6,7 @@ import OptionsSync from 'webext-options-sync';
 const OptionsSchema = z.object({
 	launch_mode: z.enum(['tab', 'popup', 'drawer']).describe("How to launch Tabs Tray when clicking the extension button. "),
 	pin_tray_tab: z.boolean().describe("Whether to automatically pin the Tabs Tray tab after launched (Effective only in Tab Mode)."),
-	show_thumbnails: z.boolean().describe("Whether to display tab thumbnails by default."),
+	show_thumbnails: z.boolean().describe("Whether to display tab thumbnails by default. Permission required: \"Access your data for all websites\""),
 });
 
 // Create TypeScript type from schema

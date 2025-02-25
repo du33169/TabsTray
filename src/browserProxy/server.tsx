@@ -1,22 +1,30 @@
 
 //server side
 import { ACTION } from './defines'
-function get_api(api: string, item: string):any {
-	if (api in browser && item in browser[api as keyof typeof browser]) {
-		const apiObj=browser[api as keyof typeof browser];
-		return apiObj[item as keyof typeof apiObj];
-	} else {
-		console.error(`API ${api} or item ${item} not found`);
+function get_api(api: string, item: string): any {
+	if (api in browser) {
+		if (item in browser[api as keyof typeof browser]) {
+			const apiObj = browser[api as keyof typeof browser];
+			return apiObj[item as keyof typeof apiObj];
+		}
+		else {
+			console.error(`API ${api}.${item} not found`);
+			return undefined;
+		}
+	}
+	else {
+		console.error(`API ${api} not found`);
+		return undefined;
 	}
 }
 async function handle_api(api: string, method: string, args: any[]) {
 	console.log(`Calling browser API ${api}.${method} with args: `, args);
-	const handle=get_api(api,method);
+	const handle = get_api(api, method);
 	if (handle) {
 		try {
 			const result = await handle(...args);
 			return Promise.resolve(result); // Send back the result
-		} catch (error:any) {
+		} catch (error: any) {
 			return Promise.reject(error.message);
 		}
 	} else {
@@ -32,7 +40,7 @@ class PersistentListenerManager {
 	listener_factory(api: string, event: string) {
 		return async (...args: any[]) => {
 			console.log(`Received browser event ${api}.${event} with args: `, args);
-			if(!this.loaded) await this.load();
+			if (!this.loaded) await this.load();
 			Object.entries(this.tabEvents).forEach(([tabId, eventList]) => {
 				if (eventList.some(item => item.api === api && item.event === event)) {
 					console.log(`Sending browser event ${api}.${event} to tab ${tabId}`);
@@ -46,19 +54,19 @@ class PersistentListenerManager {
 			});
 		}
 	}
-	constructor(eventList:{ api: string, event: string }[]) {
+	constructor(eventList: { api: string, event: string }[]) {
 		eventList.forEach(item => {// in manifest 3, only sync eventListeners can persist across non-persistent background pages
 			const listener = this.listener_factory(item.api, item.event);
 			get_api(item.api, item.event).addListener(listener);
 		});
-		if(!this.loaded)this.load();
+		if (!this.loaded) this.load();
 	}
 	save() {
 		//save eventList to storage 
 		browser.storage.session.set({ tabEvents: this.tabEvents }).then(() => {
 			console.log(`Saved tabEvents to storage session: `, this.tabEvents);
 		});
-		
+
 	}
 	async load() {
 		//load eventList from storage 
@@ -70,13 +78,13 @@ class PersistentListenerManager {
 			console.log(`LoadedtabEvents from storage session: `, this.tabEvents);
 			this.loaded = true;
 		});
-		
+
 	}
 
-	register(tabId : number,api: string, event: string) {
+	register(tabId: number, api: string, event: string) {
 		//check if event already exists
 		if (!this.tabEvents.hasOwnProperty(tabId)) {
-			this.tabEvents[tabId] = [];			
+			this.tabEvents[tabId] = [];
 		}
 		const eventList = this.tabEvents[tabId];
 		const index = eventList.findIndex(item => item.api === api && item.event === event);
@@ -115,7 +123,7 @@ class PersistentListenerManager {
 
 
 async function handle_event(listenerMgr: PersistentListenerManager, tabId: number, api: string, event: string, action: string) {
-	
+
 	if (action === ACTION.BROWSER_EVENT_ADD) {
 		console.log(`Registering browser event ${api}.${event} from tab ${tabId}`);
 		listenerMgr.register(tabId, api, event);
@@ -130,12 +138,16 @@ function handle_message_factory(listenerMgr: PersistentListenerManager) {
 	return async function handle_message(message: any, sender: browser.runtime.MessageSender, sendResponse: (response: any) => void): Promise<any> {
 		const { action, ...rest } = message;
 		console.log(`Received message from content script: `, message);
-		if (action === ACTION.BROWSER_API) {
+		if (action === ACTION.BROWSER_API_TEST) {
+			const { api, method } = rest;
+			return get_api(api, method) !== undefined; // return boolean indicating if api and method exist
+		}
+		else if (action === ACTION.BROWSER_API) {
 			const { api, method, args } = rest;
 			return handle_api(api, method, args);
 		} else if (action === ACTION.BROWSER_EVENT_ADD || action === ACTION.BROWSER_EVENT_REMOVE) {
 			const { api, event } = rest;
-			return handle_event(listenerMgr,sender.tab!.id!, api, event, action);
+			return handle_event(listenerMgr, sender.tab!.id!, api, event, action);
 		} else if (action === ACTION.BROWSER_EVENT_CLEAR) {
 			listenerMgr.unregister_tab(sender.tab!.id!);
 		} else {
