@@ -103,10 +103,21 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
         console.log('tab move result:', result);
         return result;
     }
+
+    const mode2minWidth: Record<TrayMode, string> = {
+        [TrayMode.TAB] : "100%",
+        [TrayMode.POPUP] : "800px",
+        [TrayMode.IN_PAGE]: "100%",
+    }
+    const mode2minHeight: Record<TrayMode, string> = {
+        [TrayMode.TAB] : "100vh",
+        [TrayMode.POPUP] : "600px",
+        [TrayMode.IN_PAGE]: "60vh",
+    }
     return (
         <Box
-            minWidth={(mode === TrayMode.POPUP ? "800px" : "100vw")}
-            minHeight={mode === TrayMode.TAB ? "100vh" : (mode === TrayMode.POPUP ? "600px" : "60vh")}
+            minWidth={mode2minWidth[mode]}
+            minHeight={mode2minHeight[mode]}
             colorPalette="brand" backgroundColor={TRAY_COLOR_TOKENS.global_background}
         >
             {/* 800x600 is the maximal size of the popup window */}
