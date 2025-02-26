@@ -9,14 +9,14 @@ function gererate_manifest(manifestDir: string, buildDir: string, extVersion: st
 	const firefoxManifest = JSON.parse(fs.readFileSync(firefoxManifestFile, "utf-8"));
 	const chromeManifest = JSON.parse(fs.readFileSync(chromeManifestFile, "utf-8"));
 
-	function merge_mainfest(base: object|Array<any>, source:object|Array<any> ) {
+	function merge_manifest(base: object|Array<any>, source:object|Array<any> ) {
 		if (Array.isArray(base)) {
 			return base.concat(source);
 		} else if (base instanceof Object) {
 			const result = {...base};
 			for (const key in source) {
 				if (key in base) {//@ts-ignore
-					result[key] = merge_mainfest(base[key], source[key]);
+					result[key] = merge_manifest(base[key], source[key]);
 				} else {//@ts-ignore
 					result[key] = source[key];
 				}
@@ -28,7 +28,7 @@ function gererate_manifest(manifestDir: string, buildDir: string, extVersion: st
 		}
 	
 	}
-	const manifest = merge_mainfest(baseManifest, isFirefox ? firefoxManifest : chromeManifest);
+	const manifest = merge_manifest(baseManifest, isFirefox ? firefoxManifest : chromeManifest);
 	//@ts-ignore
 	manifest.version = extVersion;
 	fs.writeFileSync(path.join(buildDir, "manifest.json"), JSON.stringify(manifest, null, 4));
