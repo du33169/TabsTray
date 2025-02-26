@@ -12,8 +12,6 @@ function menu_init() {
 	browser.runtime.onInstalled.addListener(menu_register)
 }
 
-
-
 function menu_click_listener_install() {
 	browser.menus.onClicked.addListener(handle_menu_click)
 }
