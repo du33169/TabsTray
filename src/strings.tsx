@@ -30,7 +30,10 @@ const ASSET = {
 		TRAY_IN_PAGE: "/pages/tray/tray_in_page.js"
 	},
 	LICENSE: "/LICENSE" as string,
-	LICENSE_DATA: "/pages/options/about/license_data.json"
+	LICENSE_DATA: "/pages/options/about/license_data.json",
+	DOCS: {
+		USAGE: "/docs/usage.md",
+	}
 }
 
 export { META, KEY, ASSET }

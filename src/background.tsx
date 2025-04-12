@@ -5,6 +5,7 @@ import { get_options } from "@/pages/options/options_schema"
 import { server_install } from "./browserProxy/server";
 import { ASSET } from "@/strings"
 import { menu_init,menu_click_listener_install } from "./menu/menu";
+import { welcome_page_install } from "./pages/options/usage";
 console.log("Background script running");
 
 // Update popup action based on options
@@ -34,3 +35,5 @@ server_install([
 
 menu_init();
 menu_click_listener_install();
+
+welcome_page_install();
