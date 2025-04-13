@@ -5,6 +5,8 @@ import { build_extension } from "./bun_build_ext";
 import { gererate_manifest } from "./gen_manifest";
 import { workaround_fix_next_themes_html_class } from "./workaround_next_themes_html";
 import { generate_license_data } from "./export_license";
+import { generate_changelog } from "./gen_changelog";
+
 //directories
 const projDir = path.resolve(path.join(__dirname, ".."));
 console.log("Project directory: " + projDir);
@@ -56,13 +58,22 @@ function clean_build_folder() {
 function copy_extension_files() {
 	console.log("Copying extension files to build folder...");
 	fs.copy(extDir, buildDir, (err) => { if (err) throw err; });
-	//copy LICENSE file
-	fs.copy(path.join(projDir, "LICENSE"), path.join(buildDir, "LICENSE"), (err) => { if (err) throw err; });
+
+	const assetsMappingPair = {
+		"LICENSE": "LICENSE",
+		"CHANGELOG.md": "CHANGELOG.md",
+		"README.md": "README.md",
+		"assets/docs": "docs",
+	}
+	Object.entries(assetsMappingPair).forEach(([src, dest]) => {
+		fs.copy(path.join(projDir, src), path.join(buildDir, dest), (err) => { if (err) throw err; });
+	});
 }
 
 async function main() {
 	clean_build_folder();
-	await build_extension(srcDir, buildDir, isFirefox,dev);
+	await build_extension(srcDir, buildDir, isFirefox, dev);
+	generate_changelog(extVersion);
 	copy_extension_files();
 	workaround_fix_next_themes_html_class(buildDir);
 	gererate_manifest(manifestDir, buildDir, extVersion, isFirefox);

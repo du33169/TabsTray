@@ -1,0 +1,34 @@
+{
+  "template": "tool/changelog_template.hbs",
+  "hideCredit": true,
+  "startingVersion": "v0.0.4",
+  "commitLimit": false,
+  "sortCommits": "date",
+  "commitUrl"  :"https://github.com/du33169/TabsTray/commit/{id}",
+  "issueUrl"   :"https://github.com/du33169/TabsTray/issues/{id}",
+  "mergeUrl"   :"https://github.com/du33169/TabsTray/pull/{id}",
+  "compareUrl" :"https://github.com/du33169/TabsTray/compare/{from}...{to}",
+
+  "replaceText": {
+      "([bB]reaking:\\s+)": "",
+      "([bB]reaking change:\\s+)": "",
+      "([cC]hange:\\s+)" : "",
+      "([cC]hange\\()" : "(",
+      "(^[fF]eat:\\s+)": "",
+      "(^[fF]eat\\()": "(",
+      "(^[fF]ix:\\s+)": "",
+      "(^[fF]ix\\()": "(",
+      "(^[cC]hore:\\s+)": "",
+      "(^[cC]hore\\()": "(",
+      "(^[dD]ocs:\\s+)": "",
+      "(^[dD]ocs\\()": "(",
+      "(^[rR]efactor:\\s+)": "",
+      "(^[rR]efactor\\()": "(",
+      "(^[tT]est:\\s+)": "",
+      "(^[tT]est\\()": "(",
+      "(^[sS]tyle:\\s+)": "",
+      "(^[sS]tyle\\()": "(",
+      "(^[pP]erf:\\s+)": "",
+      "(^[pP]erf\\()": "("
+    }
+}

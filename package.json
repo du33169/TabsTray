@@ -9,6 +9,7 @@
     "@types/react-dom": "^18.3.5",
     "@types/sortablejs": "^1.15.8",
     "@types/yargs": "^17.0.33",
+    "auto-changelog": "^2.5.0",
     "license-report": "^6.7.1",
     "web-ext": "^8.4.0",
     "yargs": "^17.7.2"
@@ -36,8 +37,8 @@
     "dev firefox": "bun run tool/build.tsx --dev --browser firefox",
     "dev chrome": "bun run tool/build.tsx --dev --browser chrome",
     "build": "bun run tool/build.tsx",
-    "lint": "bun run web-ext lint --config=web-ext-config.mjs",
-    "pack": "bun run web-ext build --config=web-ext-config.mjs",
-    "publish": "bun run web-ext sign --config=web-ext-config.mjs"
+    "lint": "bun run web-ext lint --config=tool/web-ext-config.mjs",
+    "pack": "bun run web-ext build --config=tool/web-ext-config.mjs",
+    "publish": "bun run web-ext sign --config=tool/web-ext-config.mjs"
   }
 }
