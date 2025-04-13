@@ -7,7 +7,7 @@ import { workaround_fix_next_themes_html_class } from "./workaround_next_themes_
 import { generate_license_data } from "./export_license";
 import { generate_changelog } from "./gen_changelog";
 import { get_version } from "./gen_version";
-
+import { pack_src } from "./pack";
 //directories
 const projDir = path.resolve(path.join(__dirname, ".."));
 console.log("Project directory: " + projDir);
@@ -70,6 +70,7 @@ async function main() {
 	workaround_fix_next_themes_html_class(buildDir);
 	gererate_manifest(manifestDir, buildDir, versionPackage.version, isFirefox); // manifest version should not contain "v" prefix
 	generate_license_data(projDir, buildDir);
+	!dev && pack_src(projDir, distDir, versionPackage.version);
 }
 
 await main();
