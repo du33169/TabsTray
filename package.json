@@ -34,8 +34,8 @@
   },
   "scripts": {
     "dev": "bun run tool/build.tsx --dev",
-    "dev firefox": "bun run tool/build.tsx --dev --browser firefox",
-    "dev chrome": "bun run tool/build.tsx --dev --browser chrome",
+    "dev-firefox": "bun run tool/build.tsx --dev --browser firefox",
+    "dev-chrome": "bun run tool/build.tsx --dev --browser chrome",
     "build": "bun run tool/build.tsx",
     "lint": "bun run web-ext lint --config=tool/web-ext-config.mjs",
     "pack": "bun run web-ext build --config=tool/web-ext-config.mjs",
