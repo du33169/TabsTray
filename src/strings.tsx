@@ -7,6 +7,8 @@ const META = {
 	CONTRIBUTORS: [] as string[],
 	SPONSORS: [] as string[],
 	VERSION: manifest.version as string,
+	//@ts-ignore predefined VERSION_SUFFIX
+	VERSION_SUFFIX: VERSION_SUFFIX,
 	REPORT_BUG_URL: "https://github.com/du33169/TabsTray/issues/new" as string,
 	SPONSOR_URL: "https://github.com/sponsors/du33169" as string,
 	LICENSE: "GPL-3.0" as string

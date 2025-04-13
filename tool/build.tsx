@@ -6,6 +6,7 @@ import { gererate_manifest } from "./gen_manifest";
 import { workaround_fix_next_themes_html_class } from "./workaround_next_themes_html";
 import { generate_license_data } from "./export_license";
 import { generate_changelog } from "./gen_changelog";
+import { get_version } from "./gen_version";
 
 //directories
 const projDir = path.resolve(path.join(__dirname, ".."));
@@ -18,12 +19,6 @@ const manifestDir = path.join(projDir, "manifest");
 
 //arguments
 const argv = yargs(process.argv)
-	.version(false) // disable version of yargs as we use it to set ext version
-	.option("version", {
-		type: "string",
-		description: "Extension version",
-		default: "0.0.0",
-	})
 	.option("dev", {
 		type: "boolean",
 		description: "Build in development mode",
@@ -35,17 +30,14 @@ const argv = yargs(process.argv)
 		default: "firefox",
 	}).parseSync();
 
-const extVersion = argv.version;
 const dev = argv.dev;
+const versionPackage = get_version();
 const browserTarget = argv.browser;
-
-//version check
-if (!dev && extVersion === "0.0.0") {
-	console.error("[Error] Production mode with version 0.0.0. Set a valid version.");
+if (!dev && versionPackage.suffix !== "") {
+	console.error("Cannot build in release mode with a nightly build version", versionPackage.scmVersion);
 	process.exit(1);
 }
-
-console.log("Building version " + extVersion + " for " + browserTarget + " in " + (dev ? "development" : "production") + " mode...");
+console.log("Building version " + versionPackage.scmVersion + " for " + browserTarget + " in " + (dev ? "development" : "production") + " mode...");
 
 const isFirefox = browserTarget.toLowerCase() === "firefox";
 
@@ -72,11 +64,11 @@ function copy_extension_files() {
 
 async function main() {
 	clean_build_folder();
-	await build_extension(srcDir, buildDir, isFirefox, dev);
-	generate_changelog(extVersion);
+	await build_extension(srcDir, buildDir, isFirefox, versionPackage.suffix, dev);
+	generate_changelog();
 	copy_extension_files();
 	workaround_fix_next_themes_html_class(buildDir);
-	gererate_manifest(manifestDir, buildDir, extVersion, isFirefox);
+	gererate_manifest(manifestDir, buildDir, versionPackage.version, isFirefox); // manifest version should not contain "v" prefix
 	generate_license_data(projDir, buildDir);
 }
 

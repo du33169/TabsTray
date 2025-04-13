@@ -51,7 +51,7 @@ function NatigationBar({ curTabId, setCurTabId }: { curTabId: string, setCurTabI
                 {/* title and version */}
                 <HStack alignItems={"baseline"} justifyContent={"center"} gap={3}>
                     <Heading fontSize={"2xl"}>{META.EXT_NAME}</Heading>
-                    <Text>v{META.VERSION}</Text>
+                    <Text>v{META.VERSION}{META.VERSION_SUFFIX}</Text>
                 </HStack>
             </HStack>
             {/* navigation button */}

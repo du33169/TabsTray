@@ -1,6 +1,6 @@
 ## Changelog
 
-### [vdev](https://github.com/du33169/TabsTray/compare/v0.0.3...vdev) - 
+### [v0.0.4](https://github.com/du33169/TabsTray/compare/v0.0.3...v0.0.4) -  2025-04-13 
 
 #### New Features
 
