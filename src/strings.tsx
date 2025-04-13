@@ -35,6 +35,8 @@ const ASSET = {
 	LICENSE_DATA: "/pages/options/about/license_data.json",
 	DOCS: {
 		USAGE: "/docs/usage.md",
+		CHANGELOG: "/CHANGELOG.md",
+		README: "/README.md",
 	}
 }
 
