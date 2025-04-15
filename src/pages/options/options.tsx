@@ -58,7 +58,7 @@ function NatigationBar({ curTabId, setCurTabId }: { curTabId: string, setCurTabI
             <Tabs.Root value={curTabId} variant={"plain"} size={"lg"} onValueChange={(valueDetails) => setCurTabId(valueDetails.value)} >
                 <Tabs.List>
                     {OPTION_TABS.map((tab) =>
-                    (<Tabs.Trigger value={tab.id} asChild>
+                    (<Tabs.Trigger key={tab.id} value={tab.id} asChild>
                         {/* use link to add url navigation parameter */}
                         <Link unstyled href={`#${tab.id}`}>
                             {tab.icon} {tab.label}
@@ -118,7 +118,7 @@ function App() {
                         </Heading>
                         {
                             OPTION_TABS.map((tab) => (
-                                    <Tabs.Content value={tab.id} width={"100%"}>
+                                <Tabs.Content key={tab.id} value={tab.id} width={"100%"}>
                                         {tab.content}
                                     </Tabs.Content>
                                 )
