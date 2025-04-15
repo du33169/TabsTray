@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import OptionsSync from 'webext-options-sync';
+import { MACRO } from '@/strings';
 
 // Define the Zod Schema
 
@@ -16,8 +17,7 @@ type Options = z.infer<typeof OptionsSchema>;
 const defaultValues: Options = {
 	launch_mode: "tab",
 	pin_tray_tab: true,
-	//@ts-ignore
-	show_thumbnails: IS_FIREFOX ? true: false,
+	show_thumbnails: MACRO.IS_FIREFOX ? true: false,
 };
 
 const optionText2Label: Record<string, string> = {

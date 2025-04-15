@@ -5,13 +5,13 @@ import { CloseButton } from "@/components/ui/close-button";
 import { Card, Image, AspectRatio, Text, HStack, Container, Icon, Center, Collapsible, Show } from "@chakra-ui/react";
 
 import { TRAY_COLOR_TOKENS } from "@/theme/tray_color";
+import { MACRO } from "@/strings";
 
 function Tab({ browserApiProvider = browser, tab, showThumbnails }: { browserApiProvider?: typeof browser, tab: browser.tabs.Tab, showThumbnails: boolean }) {
     const [thumbnailUri, setThumbnailUri] = useState<string | null>(null); // 创建状态
     useEffect(() => {
         async function fetchThumbnail() {
-            //@ts-ignore
-            if (IS_FIREFOX) {
+            if (MACRO.IS_FIREFOX) {
                 const thumbUri = await browserApiProvider.tabs.captureTab(tab.id!, { scale: 0.25 });
                 setThumbnailUri(thumbUri);
             }

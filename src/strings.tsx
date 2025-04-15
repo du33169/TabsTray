@@ -1,5 +1,13 @@
 const manifest = browser.runtime.getManifest();
 
+const MACRO = {
+	// @ts-ignore predefined VERSION_SUFFIX
+	VERSION_SUFFIX: _VERSION_SUFFIX,
+	// @ts-ignore predefined IS_FIREFOX
+	IS_FIREFOX: _IS_FIREFOX,
+	// @ts-ignore predefined IS_CHROME
+	IS_CHROME: _IS_CHROME,
+}
 const META = {
 	EXT_NAME: manifest.name as string,
 	HOMEPAGE_URL: manifest.homepage_url as string,
@@ -8,7 +16,7 @@ const META = {
 	SPONSORS: [] as string[],
 	VERSION: manifest.version as string,
 	//@ts-ignore predefined VERSION_SUFFIX
-	VERSION_SUFFIX: VERSION_SUFFIX,
+	VERSION_SUFFIX: MACRO.VERSION_SUFFIX,
 	REPORT_BUG_URL: "https://github.com/du33169/TabsTray/issues/new" as string,
 	SPONSOR_URL: "https://github.com/sponsors/du33169" as string,
 	LICENSE: "GPL-3.0" as string
@@ -40,4 +48,4 @@ const ASSET = {
 	}
 }
 
-export { META, KEY, ASSET }
+export { MACRO, META, KEY, ASSET }

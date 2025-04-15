@@ -3,7 +3,7 @@ import { get_tabChangeEvents } from "@/utils";
 import { get_icon_color } from '@/theme/theme';
 import { get_options, OptionsSchema } from '@/pages/options/options_schema';
 import { isRestrictedUrl } from '@/utils';
-import { META } from '@/strings';
+import { MACRO, META } from '@/strings';
 async function update_action_enable() {
     const activeTab = await browser.tabs.query({ active: true, currentWindow: true });
     if (activeTab.length !== 1) {
@@ -85,8 +85,7 @@ export function update_icon_on_theme_install() {
     browser.windows.onFocusChanged.addListener((windowId: number) => {
         windowId !== browser.windows.WINDOW_ID_NONE && updateIcon();
     })
-    //@ts-ignore
-    IS_FIREFOX && browser.theme.onUpdated.addListener(updateIcon);
+    MACRO.IS_FIREFOX && browser.theme.onUpdated.addListener(updateIcon);
     updateIcon();
 }
 

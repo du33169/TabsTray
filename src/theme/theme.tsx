@@ -6,6 +6,7 @@ import {get_tray_colors_from_firefox, TRAY_COLOR_TOKENS, BRAND_PALETTE} from "./
 // default theme colors exported from manifests of firefox official themes
 import defaultLightThemeColor from "./default_light_theme_colors.json"
 import defaultDarkThemeColor from "./default_dark_theme_colors.json"
+import { MACRO } from "@/strings";
 
 
 function get_tray_color_tokens_from_firefox(ThemeColors: browser._manifest._ThemeTypeColors) {
@@ -59,8 +60,7 @@ async function get_theme_config_content(browserApiProvider: typeof browser = bro
 }
 async function get_icon_color(browserApiProvider: typeof browser = browser) {
 	// used for non-theme related items like svg icons, etc
-	// @ts-ignore
-	if (IS_FIREFOX) {
+	if (MACRO.IS_FIREFOX) {
 		const { themeColors, colorScheme } = await get_theme_color_with_fallback(browserApiProvider);
 		// vertical mode: action button follow tab_background_text
 		// horizontal mode: action button follow toolbar_text

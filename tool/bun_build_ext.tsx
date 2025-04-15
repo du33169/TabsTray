@@ -2,7 +2,7 @@ import path from "path";
 import type {BuildConfig} from "bun"
 async function build_extension(srcDir: string, buildDir: string, isFirefox: boolean, versionSuffix: string, dev: boolean) {
 	const defaultDefines = {
-		"VERSION_SUFFIX": `"${versionSuffix}"` // must wrap in double quotes to be a string literal as we directly replace source code
+		"_VERSION_SUFFIX": `"${versionSuffix}"` // must wrap in double quotes to be a string literal as we directly replace source code
 	}
 	const commonBuildConfig: BuildConfig = {
 		root: srcDir,
@@ -10,13 +10,13 @@ async function build_extension(srcDir: string, buildDir: string, isFirefox: bool
 		outdir: buildDir,
 		define: isFirefox ? {
 			// "browser" namespace is used in sourcecode
-			"IS_FIREFOX": "true",
-			"IS_CHROME": "",
+			"_IS_FIREFOX": "true",
+			"_IS_CHROME": "",
 			...defaultDefines,
 		}:{ 
 			"browser": "chrome",//use chrome api namespace
-			"IS_CHROME": "true",
-			"IS_FIREFOX": "",
+			"_IS_CHROME": "true",
+			"_IS_FIREFOX": "",
 			...defaultDefines,
 		},
 		sourcemap: dev? "linked":"none",

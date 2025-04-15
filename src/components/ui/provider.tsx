@@ -19,6 +19,7 @@ import {
 import root from "react-shadow"
 
 import { get_theme_config_content } from "@/theme/theme";
+import { MACRO } from "@/strings"
 
 const varRoot = ":host"
 
@@ -67,8 +68,7 @@ export function Provider(props: ProviderProps) {
       setThemeConfigContent(themeConfigContent);
     }
 
-    //@ts-ignore
-    if (IS_FIREFOX) {
+    if (MACRO.IS_FIREFOX) {
       fetchTheme();
       browserEvent.theme.onUpdated.addListener(fetchTheme);
       //also add media query listener for color scheme change

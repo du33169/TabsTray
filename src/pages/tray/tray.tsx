@@ -11,6 +11,7 @@ import { get_options, set_options } from "../options/options_schema";
 import { get_icon_color } from "@/theme/theme";
 import { TRAY_COLOR_TOKENS } from "@/theme/tray_color";
 import { TrayMode,fetchTrayMode } from "./mode";
+import { MACRO } from "@/strings";
 
 interface SortableTabData {
     id: number;
@@ -46,8 +47,7 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
         }
         async function onTabChanged() {
             const newTabs = await fetchTabs();
-            //@ts-ignore
-            IS_FIREFOX && mode===TrayMode.TAB && await updateTrayTabIcon(newTabs.length);//for event listener idenfitying
+            MACRO.IS_FIREFOX && mode===TrayMode.TAB && await updateTrayTabIcon(newTabs.length);//for event listener idenfitying
         }
         onTabChanged();
 
@@ -59,13 +59,11 @@ function Tray({ browserApiProvider = browser, browserEventProvider = browser }: 
 
         // add event listeners
         get_tabChangeEvents(browserEventProvider).forEach(event => event.addListener(onTabChanged));
-        //@ts-ignore
-        IS_FIREFOX && browserEventProvider.theme.onUpdated.addListener(onTabChanged);
+        MACRO.IS_FIREFOX && browserEventProvider.theme.onUpdated.addListener(onTabChanged);
         // clean up
         return () => {
             get_tabChangeEvents(browserEventProvider).forEach(event => event.removeListener(onTabChanged));
-            //@ts-ignore
-            IS_FIREFOX && browserEventProvider.theme.onUpdated.removeListener(onTabChanged);
+            MACRO.IS_FIREFOX && browserEventProvider.theme.onUpdated.removeListener(onTabChanged);
         }
 
     }, []);
